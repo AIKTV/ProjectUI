@@ -6,7 +6,7 @@
 
 ### 拉取仓库
 默认已经安装git
-</br></br>在你喜欢的地方右键选择```git bash here```  
+</br></br>在~~你喜欢的地方~~资源管理器合适的目录（推荐新建Projects），右键选择```git bash here```  
 执行命令</br>
 ```
 git clone https://github.com/AIKTV/ProjectUI.git
@@ -40,3 +40,8 @@ pip install -r requirements.txt
 ```
 
 安装项目所需模块
+
+### 外部工具添加
+
+[知乎教程](https://zhuanlan.zhihu.com/p/166086095)
+注意，由于使用了conda虚拟环境，需要将**目标地址**更改为**虚拟环境**中的程序
