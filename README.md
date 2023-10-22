@@ -4,7 +4,7 @@
 ### main
 为完全保护分支，不允许直接提交，要求代码检查，bot代码检查，管理员审阅
 ### develop
-半保护分支，允许直接提交，只要求代码提供者审查
+半保护分支，允许直接提交，只要求代码提供者审查，日常使用为此分支
 
 ## 环境配置
 默认使用Pycharm
@@ -71,5 +71,5 @@ Group:External Tools
 Program:D:\xxx\Scripts\pyrcc5.exe
 Arguments:$FileName$ -o $FileNameWithoutExtension$.py
 Working directory：$FileDir$
-4. 
+
 注意，由于使用了conda虚拟环境，需要将**目标地址**更改为**虚拟环境**中的程序
