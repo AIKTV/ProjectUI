@@ -49,5 +49,6 @@ pip install -r requirements.txt
 
 ### 外部工具添加
 
-[知乎教程](https://zhuanlan.zhihu.com/p/166086095)
+[知乎教程](https://zhuanlan.zhihu.com/p/166086095)  
+[CSDN教程](https://blog.csdn.net/Pan_peter/article/details/130606896) 这个更详细，建议看这个</br>
 注意，由于使用了conda虚拟环境，需要将**目标地址**更改为**虚拟环境**中的程序
