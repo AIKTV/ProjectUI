@@ -51,4 +51,25 @@ pip install -r requirements.txt
 
 [知乎教程](https://zhuanlan.zhihu.com/p/166086095)  
 [CSDN教程](https://blog.csdn.net/Pan_peter/article/details/130606896) 这个更详细，建议看这个</br>
+
+参数：
+1. QT Designer
+Name:QtDesigner
+Group:External Tools
+Program:D:\xxx\Lib\site-packages\qt5_applications\Qt\bin\designer.exe
+Arguments:$FileDir$\$FileName$ 
+Working directory：$FileDir$
+2. PyUIC
+Name:pyuic5
+Group:External Tools
+Program:D:\xxx\Scripts\pyuic5.exe
+Arguments:$FileName$ -o $FileNameWithoutExtension$.py
+Working directory：$FileDir$
+3. PyRCC
+Name:pyuic5
+Group:External Tools
+Program:D:\xxx\Scripts\pyrcc5.exe
+Arguments:$FileName$ -o $FileNameWithoutExtension$.py
+Working directory：$FileDir$
+4. 
 注意，由于使用了conda虚拟环境，需要将**目标地址**更改为**虚拟环境**中的程序
