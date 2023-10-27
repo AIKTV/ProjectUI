@@ -28,7 +28,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
         print(fileName)
         print(fileType)
 
-
+# ↓下面这行运行
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     win = MainForm()
