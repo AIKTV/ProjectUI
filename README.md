@@ -51,3 +51,6 @@ pip install -r requirements.txt
 
 [知乎教程](https://zhuanlan.zhihu.com/p/166086095)
 注意，由于使用了conda虚拟环境，需要将**目标地址**更改为**虚拟环境**中的程序
+
+录音需要用到PyAudio,可以在终端用以下指令安装：
+pip install PyAudio
