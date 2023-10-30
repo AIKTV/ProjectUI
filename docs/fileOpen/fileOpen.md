@@ -28,10 +28,11 @@ CallMainWindow.py是主文件
 此代码可用于创建一个简单的文件打开应用程序，用户可以使用该应用程序选择并打开文本文件。
 
 </details>
+<div id="tp"></div>
 
 ### 关于__init__ __name__ __main__这样的
 
-<details id="tp">
+<details>
 <summary>详细内容点击展开</summary>
 
 我明白你的意思了。让我为你解释这些特殊的方法和变量：
