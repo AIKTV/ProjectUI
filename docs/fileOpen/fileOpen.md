@@ -1,4 +1,6 @@
 # 打开文件
+懒人快速使用  
+[点击跳转](#jump)
 ## 首先
 样板例子是同目录下的[CallMainWindow.py](./CallMainWindow.py)和[fileopen.py](./fileopen.py)</br>
 fileopen.py是由fileopen.ui转化的python布局文件  
@@ -26,8 +28,10 @@ CallMainWindow.py是主文件
 此代码可用于创建一个简单的文件打开应用程序，用户可以使用该应用程序选择并打开文本文件。
 
 </details>
+<div id="tp"></div>
 
 ### 关于__init__ __name__ __main__这样的
+
 <details>
 <summary>详细内容点击展开</summary>
 
@@ -85,3 +89,63 @@ app.exec_()
 
 ## 最后
 还有什么问题自己搜吧，欢迎补充，真的懒得写文档了（
+
+</br></br></br>
+<div id="jump"></div>
+
+#### 懒人快速上手
+import部分
+```python
+import os
+import sys
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import *
+from AIKTVUI import Ui_MainWindow
+# AIKTVUI为ui转化出的py文件名
+```
+正文部分
+```python
+class testform(QMainWindow,Ui_MainWindow):
+    # testform是自定义类名，随便改成啥，下面要再用
+    def __init__(self):
+        super(testform, self).__init__()
+        # testform记得改
+        self.setupUi(self)
+        self.pushButton.clicked.connect(self.open_file)
+        #pushButton是你使用的控件id，clicked()为button特有，其他的可能是triggered()或者toggle()
+        # open_file是下面定义的方法名
+
+    def open_file(self):
+        #open_file随便，上面要用
+        fileName,fileType=QtWidgets.QFileDialog.getOpenFileName(
+            self,"Open File",os.getcwd(),'随便啥文件(*)')
+        #fileName和fileType是自定义变量名，用于储存文件地址和文件类型（后缀）
+        print(fileName)
+        print(fileType)
+        #上两行是测试用的，正式用不用写
+```
+测试调用
+```python
+if __name__=='__main__':
+```
+此行固定使用，详见上面 [关于__init__ __name__ __main__这样的](#tp)  
+接上
+```python
+    app = QtWidgets.QApplication(sys.argv)
+    win = testform()
+    #记得改成上面的自定义类名
+    win.show()
+    sys.exit(app.exec_())
+```
+最后  
+可能会出现如下报错
+```
+DeprecationWarning: sipPyTypeDict() is deprecated, the extension module should use sipPyTypeDictRef() instead
+  class testform(QMainWindow,Ui_MainWindow):
+```
+添加下文忽略弃用即可解决
+```python
+import warnings
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+```
