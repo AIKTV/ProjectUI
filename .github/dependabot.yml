@@ -10,14 +10,19 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+    # Add assignees
+    reviewers:
+      - "gongfuture"
+    versioning-strategy: auto
 
-  - package-ecosystem: "gitsubmodule"
-    directory: "/" # Location of package manifests
-    schedule:
-      interval: "daily"
 
-  - package-ecosystem: "github-actions"
-    # Look for `requirements.txt` in the `root` directory
-    directory: "/" # Location of package manifests
-    schedule:
-      interval: "daily"
+#  - package-ecosystem: "gitsubmodule"
+#    directory: "/" # Location of package manifests
+#    schedule:
+#      interval: "daily"
+#
+#  - package-ecosystem: "github-actions"
+#    # Look for `requirements.txt` in the `root` directory
+#    directory: "/" # Location of package manifests
+#    schedule:
+#      interval: "daily"
