@@ -1,18 +1,25 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QFileDialog
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QFileDialog
 
-app = QApplication(sys.argv)
 
-# 打开文件对话框
-file_dialog = QFileDialog()
-file_path, _ = file_dialog.getOpenFileName(None, "选择文件")
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
-if file_path:
-    file_info = QFileInfo(file_path)
-    file_name = file_info.fileName()  # 获取文件名
-    path = file_info.path()  # 获取文件路径
+        self.button = QPushButton('打开文件', self)
+        self.button.clicked.connect(self.open_file_dialog)
 
-    print("文件路径:", path)
-    print("文件名:", file_name)
+    def open_file_dialog(self):
+        options = QFileDialog.Options()
+        file_name, _ = QFileDialog.getOpenFileName(self, '选择文件', '', 'All Files (*);;Text Files (*.txt)',
+                                                   options=options)
 
-sys.exit(app.exec_())
+        if file_name:
+            print("文件路径:", file_name)
+            print("文件名:", file_name.split('/')[-1])
+
+
+if __name__ == '__main__':
+    app = QApplication([])
+    window = MainWindow()
+    window.show()
+    app.exec_()
