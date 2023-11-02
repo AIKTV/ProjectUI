@@ -5,24 +5,7 @@
 
 version: 2
 updates:
-  - package-ecosystem: "pip"
-    # Look for `requirements.txt` in the `root` directory
+  - package-ecosystem: "" # See documentation for possible values
     directory: "/" # Location of package manifests
     schedule:
-      interval: "daily"
-    # Add assignees
-    reviewers:
-      - "gongfuture"
-    versioning-strategy: auto
-
-
-#  - package-ecosystem: "gitsubmodule"
-#    directory: "/" # Location of package manifests
-#    schedule:
-#      interval: "daily"
-#
-#  - package-ecosystem: "github-actions"
-#    # Look for `requirements.txt` in the `root` directory
-#    directory: "/" # Location of package manifests
-#    schedule:
-#      interval: "daily"
+      interval: "weekly"
