@@ -170,8 +170,6 @@ class Ui_MainWindow(object):
             str_time = str_time + str(seconds)
 
         # 把分钟和秒设置在时间标签中显示
-
-
         a = str_time + "/" + str_time
         self.time_lbl.setText(f"{a}")
 
