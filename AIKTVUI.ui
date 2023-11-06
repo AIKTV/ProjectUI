@@ -53,7 +53,7 @@
      <string>音乐</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_7">
+   <widget class="QPushButton" name="pushButton_4">
     <property name="geometry">
      <rect>
       <x>80</x>
@@ -169,7 +169,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLineEdit" name="tubiao1">
+   <widget class="QLineEdit" name="table1">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -185,7 +185,7 @@
      <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
     </property>
    </widget>
-   <widget class="QLineEdit" name="tubiao2">
+   <widget class="QLineEdit" name="table2">
     <property name="geometry">
      <rect>
       <x>660</x>
@@ -229,7 +229,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_6">
+   <widget class="QLineEdit" name="lineEdit_3">
     <property name="geometry">
      <rect>
       <x>670</x>
