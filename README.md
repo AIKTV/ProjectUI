@@ -15,3 +15,10 @@
 
 ## UI布局说明文件(by @jianghuaiX)
 [ui.md](Docs/ui.md)
+
+## Contributors 
+ <a href="https://github.com/AIKTV/ProjectUI/graphs/contributors"> 
+  
+   <img src="https://contrib.rocks/image?repo=AIKTV/ProjectUI" /> 
+  
+ </a>
