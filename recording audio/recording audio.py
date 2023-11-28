@@ -29,7 +29,7 @@ class Ui_MainWindow(object):
         self.pause_flag = False
         self.ii = 0
         self.timer = QTimer()
-        # self.timer.start(1000)
+        self.timer.start(1000)
         self.timer.timeout.connect(self.disciver)
         self.pbt_Record.clicked.connect(self.transcription)
         self.pbt_Play.clicked.connect(self.play_wav)
