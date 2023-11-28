@@ -14,7 +14,7 @@
 | [AIKTV.py](AIKTV.py)   | 由*.ui文件自动生成，请勿直接编辑  |
 
 ## UI布局说明文件(by @jianghuaiX)
-[ui.md](Docs/ui.md)
+[ui.md](Docs/UI.md)
 
 ## Contributors 
  <a href="https://github.com/AIKTV/ProjectUI/graphs/contributors"> 
