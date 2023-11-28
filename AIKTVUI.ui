@@ -2,245 +2,159 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1213</width>
-    <height>741</height>
+    <width>829</width>
+    <height>600</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>600</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1920</width>
+    <height>1080</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton3">
+   <widget class="QWidget" name="configWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>540</y>
-      <width>111</width>
-      <height>51</height>
+      <x>470</x>
+      <y>100</y>
+      <width>250</width>
+      <height>181</height>
      </rect>
     </property>
-    <property name="text">
-     <string>录音</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QWidget" name="widget_3" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QPushButton" name="configButton">
+          <property name="text">
+           <string>AI模型配置</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="chooseRecordGroupBox">
+       <property name="title">
+        <string>选择录音文件</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignHCenter|Qt::AlignTop</set>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QPushButton" name="chooseRecord">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>选择文件</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="recordAddress"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="chooseHandledGroupBox">
+       <property name="title">
+        <string>选择处理后文件</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignHCenter|Qt::AlignTop</set>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="chooseHandled">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>选择文件</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="handledAddress"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
    </widget>
-   <widget class="QPushButton" name="pushButton_1">
+   <widget class="QWidget" name="recordWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>400</y>
-      <width>101</width>
-      <height>41</height>
+      <x>140</x>
+      <y>120</y>
+      <width>192</width>
+      <height>131</height>
      </rect>
     </property>
-    <property name="text">
-     <string>ai模型</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
-    <property name="geometry">
-     <rect>
-      <x>210</x>
-      <y>450</y>
-      <width>111</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>音乐</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_7">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>540</y>
-      <width>111</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>播放</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_5">
-    <property name="geometry">
-     <rect>
-      <x>80</x>
-      <y>450</y>
-      <width>111</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>ai音效</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_6">
-    <property name="geometry">
-     <rect>
-      <x>1050</x>
-      <y>670</y>
-      <width>93</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>退出</string>
-    </property>
-   </widget>
-   <widget class="QProgressBar" name="progressBar">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>670</y>
-      <width>881</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>24</number>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit">
-    <property name="geometry">
-     <rect>
-      <x>820</x>
-      <y>630</y>
-      <width>61</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>00：00</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
-    <property name="geometry">
-     <rect>
-      <x>880</x>
-      <y>630</y>
-      <width>61</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>/00：00</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_7">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>520</y>
-      <width>91</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>录音计时n秒</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label1">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>610</y>
-      <width>121</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>音乐名</string>
-    </property>
-    <property name="textFormat">
-     <enum>Qt::PlainText</enum>
-    </property>
-    <property name="wordWrap">
-     <bool>false</bool>
-    </property>
-    <property name="indent">
-     <number>2</number>
-    </property>
-    <property name="openExternalLinks">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="tubiao1">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>110</y>
-      <width>411</width>
-      <height>261</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>未处理音频文件或录音的声波图</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="tubiao2">
-    <property name="geometry">
-     <rect>
-      <x>660</x>
-      <y>110</y>
-      <width>411</width>
-      <height>261</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>已处理音频文件或录音的声波图</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="title">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>30</y>
-      <width>481</width>
-      <height>51</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>ai音频信号处理</string>
-    </property>
-    <property name="textFormat">
-     <enum>Qt::AutoText</enum>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <property name="wordWrap">
-     <bool>false</bool>
-    </property>
-    <property name="indent">
-     <number>-1</number>
-    </property>
-    <property name="openExternalLinks">
-     <bool>false</bool>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_6">
-    <property name="geometry">
-     <rect>
-      <x>670</x>
-      <y>450</y>
-      <width>291</width>
-      <height>161</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>显示选中模型路径</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QLabel" name="recordTimeDisplay">
+       <property name="text">
+        <string>录音时长：你还没有开始录音哦</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" name="recordButtonWidget" native="true">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QPushButton" name="recordButton">
+          <property name="text">
+           <string>开始</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pauseRecordButton">
+          <property name="text">
+           <string>暂停</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="recordOutputDisplay">
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
  </widget>
