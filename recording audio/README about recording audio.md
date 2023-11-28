@@ -1,1 +1,0 @@
-需PyAudio, paInt16
