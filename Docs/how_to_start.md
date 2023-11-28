@@ -42,11 +42,11 @@ conda install python=3.x.x
 ### 依赖安装
 使用
 ```shell
-pip install -r requirements.txt
+pip install -r ../requirements.txt
 ```
 使用镜像
 ```shell
-pip install -r requirements.txt-i http://pypi.douban.com/simple/ --trusted-host=pypi.douban.com/simple
+pip install -r ../requirements.txt -i http://pypi.douban.com/simple/ --trusted-host=pypi.douban.com/simple
 ```
 
 安装项目所需模块
