@@ -1,38 +1,34 @@
-class AudioPlayer(QMainWindow):
-    def __init__(self, folder_path):
-        super(AudioPlayer, self).__init__()
-        self.folder_path = folder_path
-        self.button = QPushButton("打开文件夹", self)
-        self.button.setGeometry(150, 80, 100, 40)
-        self.button.clicked.connect(self.open_folder)
+import sys
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
+from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
+from PyQt5.QtCore import QUrl
 
-        self.progress_bar = QProgressBar(self)  # 创建一个进度条实例
-        self.progress_bar.setGeometry(50, 150, 300, 20)  # 设置进度条在窗口中的位置和大小
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
 
-        self.timer = QBasicTimer()  # 创建一个基本定时器实例
-        self.step = 0  # 初始化进度条值
+        self.player = QMediaPlayer()  # 创建音频播放器对象
+        self.audio_file = "path_to_your_audio_file.wav"# 替换为您的音频文件路径
 
-    def timerEvent(self, event):
-        if self.step >= 100:
-            self.timer.stop()  # 如果进度条已经满，则停止计时器
-            return
+        self.button = QPushButton("A", self)
+        self.button.clicked.connect(self.toggle_playback)  # 绑定按钮点击事件
 
-        self.step += 1  # 增加进度条值
-        self.progress_bar.setValue(self.step)  # 更新进度条的显示值
+        self.setCentralWidget(self.button)
 
-    def open_folder(self):
-        folder_path = QDir.toNativeSeparators(self.folder_path)  # 转换为本地平台的路径格式
-        os.startfile(folder_path)  # 打开指定路径的文件夹
-
-        self.step = 0  # 重置进度条值
-        self.timer.start(100, self)  # 启动定时器，每100ms更新一次进度条
-
+    def toggle_playback(self):
+        if self.button.text() == "A":
+            media = QMediaContent(QUrl.fromLocalFile(self.audio_file))
+            self.player.setMedia(media)
+            self.player.play()
+            self.button.setText("C")
+        else:
+            self.player.pause()
+            self.button.setText("A")
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)  # 创建应用程序实例
-    folder_path = "D:\新建文件夹"  # 在这里替换为你自己指定的目录路径
-    player = AudioPlayer(folder_path)  # 创建音频播放器实例，传入文件夹路径
-    player.show()  # 显示音频播放器窗口
-
-    sys.exit(app.exec_())  # 运行应用程序的事件循环，直到程序退出
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
 
