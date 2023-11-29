@@ -1,29 +1,52 @@
-# 基于python的ai语音处理界面
-## 预计功能
- 该项目功能为在ui界面上将录音或音频文件发送给**可供用户选择**的已经训练好的ai模型，电脑通过**脚本**的辅助自动跑模型合成处理好的ai音频文件并将其返回到可在ui界面显示的文件夹目录中，然后用户对其进行**播放**和**显示**音频等操作。
-## 设计要求。
-1. * 按钮1(pushButton_1)：选择ai模型。**（ @gongfuture ）**
-    * 按钮2（pushButton_2）：打开文件夹，选择未处理的音频文件。
-    * 按钮3(pushButton3)：使电脑录音
-    * 按钮4(pushButton_4)：播放音频文件（若文件在处理中，则显示**处理中...**)
-    * 按钮5（pushButton_5）：打开文件夹，选择已处理的音频文件。
-    * 按钮6(pushButton_6)：退出ui界面
-2.  * 进度条（progressBar）：显示播放进度 （ @xiubi44 ）
-3.  * 文本框1：显示播放文件名称（若为录音文件则直接显示**录音**）
-    * 文本框2(lineEdit_2)：显示播放文件总时间 （ @xiubi44 ）
-    * 文本框3(lineEdit)：显示播放文件当前播放时间（文本框2和3中间加一个/）（ @xiubi44 ）
-    * 文本框4(lineEdit_3)：显示选中模型路径（ @gongfuture ）
-    * 文本框5：录音计时
-4. * 图表1(table1)：显示未处理音频文件或录音的声波图
-    * 图表2(table2)：显示已处理音频文件或录音的声波图
-5.  * 脚本：自动选择步数，自动运行  （ @fAx1A ）
-## 参考
-[Python Qt 简介 | 白月黑羽](https://www.byhy.net/tut/py/gui/qt_01/)
-[QPushButton — Qt for Python --- QPushButton — 用于 Python 的 Qt](https://doc.qt.io/archives/qtforpython-5.12/PySide2/QtWidgets/QPushButton.html)
-[QComboBox — Qt for Python](https://doc.qt.io/archives/qtforpython-5.12/PySide2/QtWidgets/QComboBox.html)
-[]()
-年轻的**舰长**，**旅行者**，**开拓者**要学会分享好资源，好网站🤣
-## 备注
-  图表可能不需要，放最后做。处理好的文件和未处理文件是否需要保存与放置在哪个文件夹需商议，当多个模块后端相互联系时开发者需及时沟通或一人独揽（最好）。前端和后端需紧密配合，同步进行。文本框选择文件可以用控件（组合选择框）来代替（看需求）。有实力的可以用Qpainter自定义控件简化操作（极其推荐）。还需要有一名负责美工与装饰的开发者，会修改按钮，加入图画（最好会一点内嵌web浏览器），使ui界面流畅（比如调整播放条长度和采样率使其运作时不会太快和不卡顿；处理文件需要时间，所以加入一个显示**处理中**的按钮可以防止用户以为是卡顿）。最后助我们合作愉快😁😁😁
-##  遇到的问题：
-## **若有其它想法，请点击**编辑**在下面⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️填写建议**
+# 各部分控件id及对应功能
+## AI配置及文件目录选择
+| id                    | 类型      | 功能     | 备注  |
+|-----------------------|---------|--------|-----|
+| configWidget          | QWidget | 配置区域外框 ||
+
+| id                   | 类型          | 功能         | 备注  |
+|----------------------|-------------|------------|-----|
+| chooseRecordGroupBox | QGroupBox   | 原始音频选择部件外框 ||
+| chooseRecord         | QPushButton | 原始文件选择按钮   ||
+| recordAddress        | QLineEdit   | 原始文件地址显示   ||
+
+| id                    | 类型          | 功能          | 备注  |
+|-----------------------|-------------|-------------|-----|
+| chooseHandledGroupBox | QGroupBox   | 处理后音频选择部件外框 |     |
+| chooseHandled         | QPushButton | 处理后文件选择按钮   |     |
+| handledAddress        | QLineEdit   | 处理后文件地址显示   ||
+
+| id           | 类型          | 功能       | 备注         |
+|--------------|-------------|----------|------------|
+| configButton | QPushButton | AI模型配置菜单 | 由 fAx1A 负责 |
+
+## 录音控制模块
+| id                  | 类型          | 功能         | 备注             |
+|---------------------|-------------|------------|----------------|
+| recordWidget        | QWidget     | 录音区域外框     ||
+| recordTimeDisplay   | QLabel      | 录音时长显示     | 更新时需要加上前面中文    |
+| recordButtonWidget  | QWidget     | 录音启停按钮外框   ||
+| recordButton        | QPushButton | 录音开始结束按钮   | 默认开始，录音时为结束    |
+| pauseRecordButton   | QPushButton | 录音暂停继续按钮   | 默认暂停，暂停时为继续    |
+| recordOutputDisplay | QLabel      | 录音文件保存路径显示 | 默认空白，录音保存时显示路径 |
+
+## 播放模块
+| id         | 类型      | 功能     | 备注  |
+|------------|---------|--------|-----|
+| playWidget | QWidget | 播放区域外框 ||
+
+| id               | 类型          | 功能         | 备注          |
+|------------------|-------------|------------|-------------|
+| recordPlayBox    | QGroupBox   | 原始音频播放区域   ||
+| recordPlayButton | QPushButton | 原始音频播放按钮   | 默认开始，播放时为暂停 |
+| recordStopButton | QPushButton | 原始音频播放停止按钮 | 始终为结束       |
+
+| id                | 类型          | 功能          | 备注          |
+|-------------------|-------------|-------------|-------------|
+| handledPlayBox    | QGroupBox   | 处理后音频播放区域   ||
+| handledPlayButton | QPushButton | 处理后音频播放按钮   | 默认开始，播放时为暂停 |
+| handledStopButton | QPushButton | 处理后音频播放停止按钮 | 始终为结束       |
+
+| id         | 类型     | 功能      | 备注               |
+|------------|--------|---------|------------------|
+|playFrame| QFrame | 滑动进度条外框 | 内部内容由 xiubi44 负责 |

@@ -33,12 +33,10 @@ class Recorder(QMainWindow):
 
         self.recording = False
         self.record_file_path = ''
-        self.counter = 0
 
     def start_recording(self):
         self.recording = True
-        self.counter += 1
-        self.record_file_path = f"record_{self.counter}.wav"
+        self.record_file_path = 'record.wav'
         threading.Thread(target=self._record).start()
 
     def stop_recording(self):
@@ -91,3 +89,5 @@ if __name__ == '__main__':
     recorder = Recorder()
     recorder.show()
     sys.exit(app.exec_())
+
+
