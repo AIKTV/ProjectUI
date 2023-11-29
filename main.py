@@ -7,11 +7,30 @@ import os
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
+recordFileAddress = ""  # 录音/原始文件地址
+handledFileAddress = ""  # 处理后文件地址
+
+
 class MainForm(QMainWindow, Ui_MainWindow):
+    """正式文件 MainForm class"""
     def __init__(self):
         super(MainForm, self).__init__()
         self.setupUi(self)
+        self.chooseRecord.clicked.connect(lambda:self.openfiledialog('record'))
+        self.chooseHandled.clicked.connect(lambda:self.openfiledialog('handled'))
 
+    def openfiledialog(self, type):
+        global recordFileAddress
+        global handledFileAddress  # 声明全局变量
+        filename, filetype = QtWidgets.QFileDialog.getOpenFileName(
+            self, "选取文件", os.getcwd(), '波形文件(*.wav)')
+        if filename:  # 如果文件名非空
+            if type == 'record':  # 传递的类型为record 录音/原始文件
+                self.recordAddress.setText(filename)  # 设置文本框内容
+                recordFileAddress = filename  # 更新全局变量的值
+            if type == 'handled':  # 传递的类型为handled 处理后文件
+                self.handledAddress.setTex(filename)
+                handledFileAddress = filename
 
 
 if __name__ == "__main__":
