@@ -29,7 +29,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
                 self.recordAddress.setText(filename)  # 设置文本框内容
                 recordFileAddress = filename  # 更新全局变量的值
             if type == 'handled':  # 传递的类型为handled 处理后文件
-                self.handledAddress.setTex(filename)
+                self.handledAddress.setText(filename)
                 handledFileAddress = filename
 
 
