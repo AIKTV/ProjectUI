@@ -21,8 +21,8 @@ updates:
 #    schedule:
 #      interval: "daily"
 #
-#  - package-ecosystem: "github-actions"
-#    # Look for `requirements.txt` in the `root` directory
-#    directory: "/" # Location of package manifests
-#    schedule:
-#      interval: "daily"
+  - package-ecosystem: "github-actions"
+    # Look for `requirements.txt` in the `root` directory
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "daily"
