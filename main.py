@@ -26,6 +26,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
         self.chooseHandled.clicked.connect(
             lambda: self.openfiledialog('handled', 'FLAC无损音频文件(*.flac)'))
         self.configButton.clicked.connect(self.openConfigDialog)
+        self.dialog = None  # 对话框对象
 
     def openfiledialog(self, button, type):
         global recordFileAddress
@@ -47,6 +48,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
                 handledFileAddress = fileaddress
 
     def openConfigDialog(self):
+        global dialog
         dialog = QtWidgets.QDialog(self)
         dialog.setWindowTitle("AI模型配置")
         layout = QtWidgets.QVBoxLayout(dialog)
@@ -109,7 +111,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
         start_button = QtWidgets.QPushButton("开始转换")
         start_button.clicked.connect(self.start_conversion)
         layout.addWidget(start_button)
-        dialog.exec_()
+        dialog.exec_()  # 显示对话框
 
 
     def start_conversion(self):
@@ -156,8 +158,9 @@ class MainForm(QMainWindow, Ui_MainWindow):
         process.waitForFinished()
         process.close()
         process.deleteLater()
-
         QtWidgets.QMessageBox.information(self,"转换完成","转换已完成！")
+        if dialog:  # 检查对话框对象是否存在
+            dialog.close()  # 关闭对话框
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
