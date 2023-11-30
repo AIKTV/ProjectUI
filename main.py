@@ -22,13 +22,19 @@ class MainForm(QMainWindow, Ui_MainWindow):
     def openfiledialog(self, type):
         global recordFileAddress
         global handledFileAddress  # 声明全局变量
+        typetext = ''
+        if type == 'record':
+            typetext = '录音/原始'
+        else:
+            typetext = '要播放的'
         filename, filetype = QtWidgets.QFileDialog.getOpenFileName(
-            self, "选取文件", os.getcwd(), '波形文件(*.wav)')
+            self, "选择" + typetext + "文件", os.getcwd(), '波形文件(*.wav)')
         if filename:  # 如果文件名非空
             if type == 'record':  # 传递的类型为record 录音/原始文件
                 self.recordAddress.setText(filename)  # 设置文本框内容
                 recordFileAddress = filename  # 更新全局变量的值
-            if type == 'handled':  # 传递的类型为handled 处理后文件
+            # if type == 'handled':  # 传递的类型为handled 处理后文件
+            else:
                 self.handledAddress.setText(filename)
                 handledFileAddress = filename
 
