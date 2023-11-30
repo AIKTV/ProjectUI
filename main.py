@@ -50,7 +50,9 @@ class MainForm(QMainWindow, Ui_MainWindow):
         self.wav_name_edit = QLineEdit()
         layout.addWidget(self.wav_name_label)
         layout.addWidget(self.wav_name_edit)
-        self.wav_name_edit.setText(self.wav_name_edit.text())  # 将地址传递给 self.wav_name_edit
+        if recordFileAddress:                                         # 将地址传递给 self.wav_name_edit
+            wav_name = recordFileAddress.split('/')[-1].split('.')[0]
+            self.wav_name_edit.setText(wav_name)
 
         self.key_num_label = QLabel("请输入音高（例：维持原调为0，支持正负，数字为半音）")
         self.key_num_edit = QLineEdit()
