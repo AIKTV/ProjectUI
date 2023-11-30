@@ -22,11 +22,12 @@ class MainForm(QMainWindow, Ui_MainWindow):
         self.chooseRecord.clicked.connect(lambda:self.openfiledialog('record'))
         self.chooseHandled.clicked.connect(lambda:self.openfiledialog('handled'))
         self.configButton.clicked.connect(self.openConfigDialog)
-    def openfiledialog(self, type):
+
+    def openfiledialog(self,type):
         global recordFileAddress
         global handledFileAddress  # 声明全局变量
-        filename, filetype = QtWidgets.QFileDialog.getOpenFileName(
-            self, "选取文件", os.getcwd(), '波形文件(*.wav)')
+        filename,filetype = QtWidgets.QFileDialog.getOpenFileName(
+        self,"选取文件",os.getcwd(),'波形文件(*.wav)')
         if filename:  # 如果文件名非空
             if type == 'record':  # 传递的类型为record 录音/原始文件
                 self.recordAddress.setText(filename)  # 设置文本框内容
@@ -49,6 +50,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
         self.wav_name_edit = QLineEdit()
         layout.addWidget(self.wav_name_label)
         layout.addWidget(self.wav_name_edit)
+        self.wav_name_edit.setText(self.wav_name_edit.text())  # 将地址传递给 self.wav_name_edit
 
         self.key_num_label = QLabel("请输入音高（例：维持原调为0，支持正负，数字为半音）")
         self.key_num_edit = QLineEdit()
