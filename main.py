@@ -25,7 +25,29 @@ class MainForm(QMainWindow, Ui_MainWindow):
             lambda: self.openfiledialog('record'))
         self.chooseHandled.clicked.connect(
             lambda: self.openfiledialog('handled'))
+        self.recordPlayButton.clicked.connect(
+            self.play_sound_a)
+        self.handledPlayButton.clicked.connect(
+            self.play_sound_b)
+        self.a = '暂停'  # 记录recordPlayButton的状态
+        self.b = '暂停'  # 记录handledPlayButton的状态
         self.configButton.clicked.connect(self.openConfigDialog)
+
+    def play_sound_a(self):
+        if self.a == '暂停':  #
+            if self.b == '播放':
+                self.audio_b.stop()
+                self.handledPlayButton.setText('播放')  # 修改handledPlayButton的文本为"播放"
+                self.b = '播放'  # 修改handledPlayButton的状态为"播放"
+
+            self.audio_a.play()  # 播放audio_a.wav音频文件
+            self.recordPlayButton.setText('暂停')  # 修改recordPlayButton的文本为"暂停"
+            self.a = '暂停'  # 修改recordPlayButton的状态为"暂停"
+        else:  # 如果recordPlayButton处于"暂停"状态
+            self.audio_a.stop()  # 停止播放audio_a.wav音频文件
+            self.recordPlayButton.setText('播放')  # 修改recordPlayButton的文本为"播放"
+            self.a = '播放'  # 修改recordPlayButton的状态为"播放"
+
 
     def openfiledialog(self, type):
         global recordFileAddress
