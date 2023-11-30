@@ -1,14 +1,14 @@
 import sys
-from PyQt5.QtWidgets import QApplication,QWidget,QVBoxLayout,QLabel,QLineEdit,QPushButton,QInputDialog,QMessageBox
+from PyQt5.QtWidgets import QApplication,QMainWindow,QVBoxLayout,QLabel,QLineEdit,QPushButton,QInputDialog,QMessageBox,QDialog
 from PyQt5.QtCore import Qt,QProcess
 
 if_enhance = 'n'
 
 
-class MainWindow(QWidget):
+class MenuWindow(QDialog):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("AI语音")
+        self.setWindowTitle("AI模型配置")
 
         layout = QVBoxLayout()
 
@@ -123,9 +123,26 @@ class MainWindow(QWidget):
 
         QMessageBox.information(self,"转换完成","转换完成！")
 
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle("主窗口")
+        self.setGeometry(100, 100, 300, 200)
+
+        self.menuButton = QPushButton("AI模型配置", self)
+        self.menuButton.setGeometry(100, 80, 100, 30)
+        self.menuButton.clicked.connect(self.openMenu)
+
+    def openMenu(self):
+        menuWindow = MenuWindow()
+        menuWindow.exec_()
 
 if __name__ == '__main__':
     app = QApplication([])
-    window = MainWindow()
-    window.show()
-    app.exec_()
+    mainwindow = MainWindow()
+    mainwindow.show()
+    sys.exit(app.exec_())
