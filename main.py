@@ -16,25 +16,35 @@ if_enhance = 'n'
 
 class MainForm(QMainWindow, Ui_MainWindow):
     """正式文件 MainForm class"""
+
     def __init__(self):
+        """使用的控件相关触发器全放这里"""
         super(MainForm, self).__init__()
         self.setupUi(self)
-        self.chooseRecord.clicked.connect(lambda:self.openfiledialog('record'))
-        self.chooseHandled.clicked.connect(lambda:self.openfiledialog('handled'))
+        self.chooseRecord.clicked.connect(
+            lambda: self.openfiledialog('record'))
+        self.chooseHandled.clicked.connect(
+            lambda: self.openfiledialog('handled'))
         self.configButton.clicked.connect(self.openConfigDialog)
 
-    def openfiledialog(self,type):
+    def openfiledialog(self, type):
         global recordFileAddress
         global handledFileAddress  # 声明全局变量
-        filename,filetype = QtWidgets.QFileDialog.getOpenFileName(
-        self,"选取文件",os.getcwd(),'波形文件(*.wav)')
-        if filename:  # 如果文件名非空
+        if type == 'record':
+            typetext = '录音/原始'
+        else:
+            typetext = '要播放的'
+        fileaddress, filetype = QtWidgets.QFileDialog.getOpenFileName(
+            self, "选择" + typetext + "文件", os.getcwd(), '波形文件(*.wav)')
+        if fileaddress:  # 如果文件名非空
             if type == 'record':  # 传递的类型为record 录音/原始文件
-                self.recordAddress.setText(filename)  # 设置文本框内容
-                recordFileAddress = filename  # 更新全局变量的值
-            if type == 'handled':  # 传递的类型为handled 处理后文件
-                self.handledAddress.setText(filename)
-                handledFileAddress = filename
+                self.recordAddress.setText(
+                    os.path.basename(fileaddress))  # 设置文本框内容
+                recordFileAddress = fileaddress  # 更新全局变量的值
+            # if type == 'handled':  # 传递的类型为handled 处理后文件
+            else:
+                self.handledAddress.setText(os.path.basename(fileaddress))
+                handledFileAddress = fileaddress
 
     def openConfigDialog(self):
         dialog = QtWidgets.QDialog(self)
