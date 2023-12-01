@@ -26,10 +26,11 @@ class MainForm(QMainWindow, Ui_MainWindow):
         super(MainForm, self).__init__()
         self.setupUi(self)
         self.chooseRecord.clicked.connect(
-            lambda: self.openfiledialog('record'))
+            lambda: self.openfiledialog('record', 'WAV波形文件(*.wav)'))
         self.chooseHandled.clicked.connect(
-            lambda: self.openfiledialog('handled'))
+            lambda: self.openfiledialog('handled', 'FLAC无损音频文件(*.flac)'))
         self.configButton.clicked.connect(self.openConfigDialog)
+        self.dialog = None  # 对话框对象
     def __init__(self):
         super(MainForm, self).__init__()
         self.setupUi(self)
@@ -185,26 +186,27 @@ class MainForm(QMainWindow, Ui_MainWindow):
 
 
 
-    def openfiledialog(self, type):
+    def openfiledialog(self, button, type):
         global recordFileAddress
         global handledFileAddress  # 声明全局变量
-        if type == 'record':
+        if button == 'record':
             typetext = '录音/原始'
         else:
             typetext = '要播放的'
         fileaddress, filetype = QtWidgets.QFileDialog.getOpenFileName(
-            self, "选择" + typetext + "文件", os.getcwd(), '波形文件(*.wav)')
+            self, "选择" + typetext + "文件", os.getcwd(), type)
         if fileaddress:  # 如果文件名非空
-            if type == 'record':  # 传递的类型为record 录音/原始文件
+            if button == 'record':  # 传递的类型为record 录音/原始文件
                 self.recordAddress.setText(
                     os.path.basename(fileaddress))  # 设置文本框内容
                 recordFileAddress = fileaddress  # 更新全局变量的值
-            # if type == 'handled':  # 传递的类型为handled 处理后文件
+            # if button == 'handled':  # 传递的类型为handled 处理后文件
             else:
                 self.handledAddress.setText(os.path.basename(fileaddress))
                 handledFileAddress = fileaddress
 
     def openConfigDialog(self):
+        global dialog
         dialog = QtWidgets.QDialog(self)
         dialog.setWindowTitle("AI模型配置")
         layout = QtWidgets.QVBoxLayout(dialog)
@@ -213,14 +215,6 @@ class MainForm(QMainWindow, Ui_MainWindow):
         self.model_name_edit = QLineEdit()
         layout.addWidget(self.model_name_label)
         layout.addWidget(self.model_name_edit)
-
-        self.wav_name_label = QLabel("请输入参考的wav干声文件名，该文件应放入raw文件夹下（例：文件名为test.wav就输入test）")
-        self.wav_name_edit = QLineEdit()
-        layout.addWidget(self.wav_name_label)
-        layout.addWidget(self.wav_name_edit)
-        if recordFileAddress:                                         # 将地址传递给 self.wav_name_edit
-            wav_name = recordFileAddress.split('/')[-1].split('.')[0]
-            self.wav_name_edit.setText(wav_name)
 
         self.key_num_label = QLabel("请输入音高（例：维持原调为0，支持正负，数字为半音）")
         self.key_num_edit = QLineEdit()
@@ -284,12 +278,14 @@ class MainForm(QMainWindow, Ui_MainWindow):
         start_button = QtWidgets.QPushButton("开始转换")
         start_button.clicked.connect(self.start_conversion)
         layout.addWidget(start_button)
-        dialog.exec_()
+        dialog.exec_()  # 显示对话框
 
 
     def start_conversion(self):
+        global recordFileAddress
         model_name = self.model_name_edit.text()
-        wav_name = self.wav_name_edit.text()
+        if recordFileAddress:                                         # 将地址传递给 self.wav_name_edit
+            wav_name = recordFileAddress.split('/')[-1].split('.')[0]
         key_num = self.key_num_edit.text()
         f0_predictor = self.f0_predictor_edit.text()
         if f0_predictor == '0':
@@ -329,8 +325,9 @@ class MainForm(QMainWindow, Ui_MainWindow):
         process.waitForFinished()
         process.close()
         process.deleteLater()
-
         QtWidgets.QMessageBox.information(self,"转换完成","转换已完成！")
+        if dialog:  # 检查对话框对象是否存在
+            dialog.close()  # 关闭对话框
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

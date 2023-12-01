@@ -20,8 +20,6 @@ from PyQt5.QtWidgets import QApplication,QMainWindow,QVBoxLayout,QLabel,QLineEdi
 from PyQt5.QtCore import Qt,QProcess
 from PyQt5 import QtCore,QtGui,QtWidgets
 
-if_enhance = 'n'
-
 
 class Ui_MainWindow(object):
     def setupUi(self,MainWindow):
@@ -419,15 +417,9 @@ class Ui_MainWindow(object):
 
 
 if __name__ == "__main__":
-    import sys
-
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-
-    # 将configButton的点击信号连接到openConfigDialog方法
-    ui.configButton.clicked.connect(ui.openConfigDialog)
-
     MainWindow.show()
     sys.exit(app.exec_())
