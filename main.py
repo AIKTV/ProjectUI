@@ -128,7 +128,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
             str_time = str_time + str(seconds)
 
         # 把分钟和秒设置在时间标签中显示
-        a = str_time + "    /"
+        a = str_time + "   /"
         self.time_lbl.setText(f"{a}")
 
     # 自定义函数，更改当前播放位置
