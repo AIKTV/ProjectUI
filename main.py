@@ -31,11 +31,6 @@ class MainForm(QMainWindow, Ui_MainWindow):
             lambda: self.openfiledialog('handled', 'FLAC无损音频文件(*.flac)'))
         self.configButton.clicked.connect(self.openConfigDialog)
         self.dialog = None  # 对话框对象
-    def __init__(self):
-        super(MainForm, self).__init__()
-        self.setupUi(self)
-        self.chooseRecord.clicked.connect(lambda:self.openfiledialog('record'))
-        self.chooseHandled.clicked.connect(lambda:self.openfiledialog('handled'))
 
     def myWindowInit(self):
         # 创建播放列表对象（窗体属性）
@@ -250,15 +245,6 @@ class MainForm(QMainWindow, Ui_MainWindow):
         self.cluster_ratio_edit = QLineEdit()
         layout.addWidget(self.cluster_ratio_label)
         layout.addWidget(self.cluster_ratio_edit)
-        filename, filetype = QtWidgets.QFileDialog.getOpenFileName(
-            self, "选取文件", os.getcwd(), '波形文件(*.wav)')
-        if filename:  # 如果文件名非空
-            if type == 'record':  # 传递的类型为record 录音/原始文件
-                self.recordAddress.setText(filename)  # 设置文本框内容
-                recordFileAddress = filename  # 更新全局变量的值
-            if type == 'handled':  # 传递的类型为handled 处理后文件
-                self.handledAddress.setText(filename)
-                handledFileAddress = filename
 
         self.if_auto_predict_f0_label = QLabel("是否使用自动音高预测？推荐语音转换开启，歌声转换开启会严重跑调（y/n）")
         self.if_auto_predict_f0_edit = QLineEdit()
