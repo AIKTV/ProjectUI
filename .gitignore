@@ -756,3 +756,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 !/AI-barbara-4.1-Stable-fcpe/
+/AI-barbara-4.1-Stable-fcpe/
