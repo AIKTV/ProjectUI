@@ -45,7 +45,8 @@ class Recorder(QMainWindow):
         self.recording = True
         self.counter += 1
         current_time = time.strftime("%m%d-%H%M")
-        self.record_file_path = f"record-{current_time}-{self.counter}.wav"
+        # 修改文件存放路径为新的位置
+        self.record_file_path = f"D:/GitHub/ProjectUI/Docs/recording audio/recordings/record-{current_time}-{self.counter}.wav"
         threading.Thread(target=self._record).start()
 
     def stop_recording(self):

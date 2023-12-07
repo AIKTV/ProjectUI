@@ -47,6 +47,10 @@
 | handledPlayButton | QPushButton | 处理后音频播放按钮   | 默认开始，播放时为暂停 |
 | handledStopButton | QPushButton | 处理后音频播放停止按钮 | 始终为结束       |
 
-| id         | 类型     | 功能      | 备注               |
-|------------|--------|---------|------------------|
-|playFrame| QFrame | 滑动进度条外框 | 内部内容由 xiubi44 负责 |
+| id         | 类型        | 功能 | 备注               |
+|------------|-----------|--|------------------|
+|mode_btn| QPushButton | 顺序和单曲 |  |
+|play_btn| QPushButton | 播放和导入和暂停 |  |
+|time_lbl| QLabel    | 实时时间 |  |
+|time_lbl_2| QLabel    | 总时间 |  |
+|time_slider| QSlider   | 进度条 |  |
