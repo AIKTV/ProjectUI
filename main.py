@@ -15,7 +15,6 @@ import wave
 import pyaudio
 from PyQt5.QtWidgets import (QApplication, QFileDialog, QHBoxLayout, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget)
 from PyQt5.QtCore import QTimer
-from PyQt5.QtMultimedia import QSound  # 导入PyQt5库中的QSound类
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -31,7 +30,6 @@ class MainForm(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
         """使用的控件相关触发器全放这里"""
-
         super(MainForm, self).__init__()
         self.setupUi(self)
         self.chooseRecord.clicked.connect(
@@ -43,34 +41,39 @@ class MainForm(QMainWindow, Ui_MainWindow):
         self.recordButton.clicked.connect(self.start_recording)
         self.pauseRecordButton.clicked.connect(self.stop_recording)
 
-        self.recording = False
-        self.record_file_path = ''
-        self.counter = 0
-
-        self.recordPlayButton.clicked.connect(
-            self.play_sound_a)
-        self.handledPlayButton.clicked.connect(
-            self.play_sound_b)
-        self.recordPlayButton_status = '暂停'  # 记录recordPlayButton的状态
-        self.handledPlayButton_status = '暂停'  # 记录handledPlayButton的状态
-
+        self.recording = False                    #接下来是初始化一些变量的代码：设置录音状态为 False，表示当前没有在录音。
+        self.record_file_path = ''                #设置录音文件路径为空。
+        self.counter = 0                          #设置计数器为 0，用于记录录音的时长。
     def start_recording(self):
+        #开始模块
         self.recording = True
+        #设置recording为True，表示正在录音
         self.counter += 1
+        # counter加1，用于生成唯一的文件名。
         current_time = time.strftime("%m%d-%H%M")
-        # 修改文件存放路径为新的位置
-        self.record_file_path = f"D:/GitHub/ProjectUI/Docs/recording audio/recordings/record-{current_time}-{self.counter}.wav"
-        threading.Thread(target=self._record).start()
+        # 修改文件存放路径为新的位置，包括当前时间、计数器和文件扩展名。
+        self.record_file_path = f"E:/Projects/Python/ProjectUI/AI-barbara-4.1-Stable-fcpe/raw/record-{current_time}-{self.counter}.wav"
+        threading.Thread(target=self._record).start()  #启动一个新的线程，调用_record方法开始录音。
 
-    def stop_recording(self):
-        self.recording = False
+    def stop_recording(self):            #停止录音模块
+        self.recording = False      #设置recording为False，表示停止录音
         self.display_recent_recording_box()
 
-    def display_recent_recording_box(self):
+    def display_recent_recording_box(self):         #录音文件保存路径显示5秒
         recent_file = self.record_file_path
-        self.recordOutputDisplay.setText(recent_file)
+        max_line_length = 20
+        #      使显示路径分成两行，可以根据需要调整每行的最大字符数
+        split_index = max_line_length
+        while split_index < len(recent_file) and recent_file[split_index] != "/":
+            split_index += 1
+
+        if split_index < len(recent_file):
+            display_path = recent_file[:split_index] + "\n" + recent_file[split_index:]
+        else:
+            display_path = recent_file
+        self.recordOutputDisplay.setText(display_path)            #显示
         self.recordOutputDisplay.show()
-        QTimer.singleShot(5000, self.recordOutputDisplay.hide)
+        QTimer.singleShot(5000, self.recordOutputDisplay.hide)       #更改秒数，例如5000表示5秒，依次类推
 
     def _update_time(self):
         seconds = 0
@@ -78,41 +81,48 @@ class MainForm(QMainWindow, Ui_MainWindow):
             self.recordTimeDisplay.setText(time.strftime('%M:%S', time.gmtime(seconds)))
             time.sleep(1)
             seconds += 1
+    #这段代码是一个用于更新录音时间显示的方法。它包括以下步骤：
+    # 首先将秒数设置为0。
+    # 在录音状态下，循环执行以下操作：
+    # 使用time.strftime函数将秒数格式化为"分:秒"的字符串，并将其显示在录音时间的UI元素上。
+    # 休眠1秒钟，以便时间能够递增。秒数加1，用于计算录音的总时长。
+    # 这个方法的作用是在录音过程中实时更新录音时间的显示，让用户能够清楚地看到录音的时长
 
     def _record(self):
-        CHUNK = 1024
-        FORMAT = pyaudio.paInt16
-        CHANNELS = 2
-        RATE = 44100
-        RECORD_SECONDS = 10
+        CHUNK = 1024  # 每次读取的数据块大小
+        FORMAT = pyaudio.paInt16  # 音频格式为16位整型
+        CHANNELS = 2  # 声道数为2
+        RATE = 44100  # 采样率为44100Hz
+        RECORD_SECONDS = 10  # 录音时长为10秒
 
-        audio = pyaudio.PyAudio()
+        audio = pyaudio.PyAudio()  # 创建PyAudio对象，用于音频输入和输出
 
         stream = audio.open(format=FORMAT, channels=CHANNELS,
                             rate=RATE, input=True,
-                            frames_per_buffer=CHUNK)
+                            frames_per_buffer=CHUNK)  # 打开音频输入流，设置格式、声道数、采样率等参数
 
-        frames = []
+        frames = []  # 用于存储录音数据的列表
 
-        t = threading.Thread(target=self._update_time)
-        t.start()
+        t = threading.Thread(target=self._update_time)  # 创建一个新线程，调用self._update_time方法实时更新录音时间的显示
+        t.start()  # 启动线程
 
-        while self.recording:
-            data = stream.read(CHUNK)
-            frames.append(data)
+        while self.recording:  # 在录音状态下，循环执行以下操作
+            data = stream.read(CHUNK)  # 从音频输入流中读取一块数据
+            frames.append(data)  # 将数据添加到frames列表中
 
-        stream.stop_stream()
-        stream.close()
-        audio.terminate()
+        stream.stop_stream()  # 停止音频输入流
+        stream.close()  # 关闭音频输入流
+        audio.terminate()  # 终止PyAudio对象
 
-        t.join()
+        t.join()  # 等待线程t结束
 
-        wf = wave.open(self.record_file_path, 'wb')
-        wf.setnchannels(CHANNELS)
-        wf.setsampwidth(audio.get_sample_size(FORMAT))
-        wf.setframerate(RATE)
-        wf.writeframes(b''.join(frames))
-        wf.close()
+        wf = wave.open(self.record_file_path, 'wb')  # 创建并打开录音文件
+        wf.setnchannels(CHANNELS)  # 设置文件的通道数
+        wf.setsampwidth(audio.get_sample_size(FORMAT))  # 设置文件的采样宽度
+        wf.setframerate(RATE)  # 设置文件的采样率
+        wf.writeframes(b''.join(frames))  # 将frames列表中的音频数据写入录音文件
+        wf.close()  # 关闭录音文件
+
     def myWindowInit(self):
         # 创建播放列表对象（窗体属性）
         self.playList = QMediaPlaylist()
@@ -259,6 +269,9 @@ class MainForm(QMainWindow, Ui_MainWindow):
             self.play_btn.setToolTip("暂停")
 
 
+
+
+
     def openfiledialog(self, button, type):
         global recordFileAddress
         global handledFileAddress  # 声明全局变量
@@ -392,42 +405,6 @@ class MainForm(QMainWindow, Ui_MainWindow):
         QtWidgets.QMessageBox.information(self,"转换完成","转换已完成！")
         if dialog:  # 检查对话框对象是否存在
             dialog.close()  # 关闭对话框
-
-    def play_sound_a(self):  # 播放audio_a.wav音频文件的方法
-        global audio_a
-        global audio_b # 声明全局变量
-        self.audio_a = QSound(recordFileAddress)  # 创建一个名为audio_a的QSound对象，用于播放audio_a.wav音频文件
-        self.audio_b = QSound(handledFileAddress)  # 创建一个名为audio_b的QSound对象，用于播放audio_b.wav音频文件
-        if self.recordPlayButton_status == '播放':  # 如果recordPlayButton处于"播放"状态
-            if self.handledPlayButton_status == '暂停':  # 如果handledPlayButton处于"暂停"状态
-                self.audio_b.stop()  # 停止播放audio_b.wav音频文件
-                self.handledPlayButton.setText('播放')  # 修改handledPlayButton的文本为"播放"
-                self.handledPlayButton_status = '播放'  # 修改handledPlayButton的状态为"播放"
-
-            self.audio_a.play()  # 播放audio_a.wav音频文件
-            self.recordPlayButton.setText('暂停')  # 修改recordPlayButton的文本为"暂停"
-            self.recordPlayButton_status = '暂停'  # 修改recordPlayButton的状态为"暂停"
-        else:  # 如果recordPlayButton处于"暂停"状态
-            self.audio_a.stop()  # 停止播放audio_a.wav音频文件
-            self.recordPlayButton.setText('播放')  # 修改recordPlayButton的文本为"播放"
-            self.recordPlayButton_status = '播放'  # 修改recordPlayButton的状态为"播放"
-
-    def play_sound_b(self):  # 播放audio_b.wav音频文件的方法
-        global record_state
-        global handle_state
-        if self.handledPlayButton_status == '播放':  # 如果handledPlayButton处于"播放"状态
-            if self.recordPlayButton_status == '暂停':  # 如果recordPlayButton处于"暂停"状态
-                self.audio_a.stop()  # 停止播放audio_a.wav音频文件
-                self.recordPlayButton.setText('播放')  # 修改recordPlayButton的文本为"播放"
-                self.recordPlayButton_status = '播放'  # 修改recordPlayButton的状态为"播放"
-
-            self.audio_b.play()  # 播放audio_b.wav音频文件
-            self.handledPlayButton.setText('暂停')  # 修改handledPlayButton的文本为"暂停"
-            self.handledPlayButton_status = '暂停'  # 修改handledPlayButton的状态为"暂停"
-        else:  # 如果handledPlayButton处于"暂停"状态
-            self.audio_b.stop()  # 停止播放audio_b.wav音频文件
-            self.handledPlayButton.setText('播放')  # 修改handledPlayButton的文本为"播放"
-            self.handledPlayButton_status = '播放'  # 修改handledPlayButton的状态为"播放"
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
