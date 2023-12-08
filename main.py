@@ -58,7 +58,17 @@ class MainForm(QMainWindow, Ui_MainWindow):
 
     def display_recent_recording_box(self):
         recent_file = self.record_file_path
-        self.recordOutputDisplay.setText(recent_file)
+        max_line_length = 20  # 可以根据需要调整每行的最大字符数
+        split_index = max_line_length
+        while split_index < len(recent_file) and recent_file[split_index] != "/":
+            split_index += 1
+
+        if split_index < len(recent_file):
+            display_path = recent_file[:split_index] + "\n" + recent_file[split_index:]
+        else:
+            display_path = recent_file
+
+        self.recordOutputDisplay.setText(display_path)
         self.recordOutputDisplay.show()
         QTimer.singleShot(5000, self.recordOutputDisplay.hide)
 
