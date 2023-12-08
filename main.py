@@ -9,7 +9,6 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtMultimedia import QMediaPlaylist, QMediaPlayer, QMediaContent
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 import os
-import subprocess
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -129,7 +128,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
             str_time = str_time + str(seconds)
 
         # 把分钟和秒设置在时间标签中显示
-        a = str_time + "    /"
+        a = str_time + "   /"
         self.time_lbl.setText(f"{a}")
 
     # 自定义函数，更改当前播放位置
@@ -159,19 +158,11 @@ class MainForm(QMainWindow, Ui_MainWindow):
         # 否则（停止状态）
         else:
             # 获取本地音频文件
-            fileNames, typeName = QFileDialog.getOpenFileNames(None, "选择音乐", 'E:/','WAV波形文件(*.wav);;FLAC无损音频文件(*.flac)')
+            fileNames, typeName = QFileDialog.getOpenFileNames(None, "选择音乐", 'D:/ai', "*")
             # 循环音频文件的列表
             for i in fileNames:
-                # 判断文件类型是否为FLAC
-                if typeName == 'FLAC无损音频文件(*.flac)':
-                    # 将FLAC文件转换为WAV格式
-                    wav_file = i.replace('.flac','.wav')
-                    subprocess.call(['ffmpeg','-i',i,'-acodec','pcm_s16le','-ar','44100',wav_file])
                 # 把音频文件加载到播放列表对象中
-                    self.playList.addMedia(QMediaContent(QUrl.fromLocalFile(wav_file)))
-                else:
-                    # 把音频文件加载到播放列表对象中
-                    self.playList.addMedia(QMediaContent(QUrl.fromLocalFile(i)))
+                self.playList.addMedia(QMediaContent(QUrl.fromLocalFile(i)))
                 # 获取音频文件路径最后一个“/"字符的位置
                 start = i.rfind('/')
                 end = i.rfind('.')

@@ -286,7 +286,8 @@ class Ui_MainWindow(object):
         self.handledStopButton.setText(_translate("MainWindow", "停止"))
         self.play_btn.setText(_translate("MainWindow", "PushButton"))
         self.mode_btn.setText(_translate("MainWindow", "PushButton"))
-        self.time_lbl.setText(_translate("MainWindow", "00:00/00:00"))
+        self.time_lbl.setText(_translate("MainWindow", "00:00   /"))
+        self.time_lbl_2.setText(_translate("MainWindow", "00:00"))
 
 
 if __name__ == "__main__":
