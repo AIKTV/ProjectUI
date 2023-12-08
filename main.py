@@ -9,11 +9,18 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtMultimedia import QMediaPlaylist, QMediaPlayer, QMediaContent
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 import os
+import time
+import threading
+import wave
+import pyaudio
+from PyQt5.QtWidgets import (QApplication, QFileDialog, QHBoxLayout, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget)
+from PyQt5.QtCore import QTimer
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 recordFileAddress = ""  # 录音/原始文件地址
 handledFileAddress = ""  # 处理后文件地址
+record_file_path = recordFileAddress  #录音文件地址record_file_path，用于录音子模块中
 
 if_enhance = 'n'
 
@@ -31,7 +38,71 @@ class MainForm(QMainWindow, Ui_MainWindow):
             lambda: self.openfiledialog('handled', 'FLAC无损音频文件(*.flac)'))
         self.configButton.clicked.connect(self.openConfigDialog)
         self.dialog = None  # 对话框对象
+        self.recordButton.clicked.connect(self.start_recording)
+        self.pauseRecordButton.clicked.connect(self.stop_recording)
 
+        self.recording = False
+        self.record_file_path = ''
+        self.counter = 0
+    def start_recording(self):
+        self.recording = True
+        self.counter += 1
+        current_time = time.strftime("%m%d-%H%M")
+        # 修改文件存放路径为新的位置
+        self.record_file_path = f"D:/GitHub/ProjectUI/Docs/recording audio/recordings/record-{current_time}-{self.counter}.wav"
+        threading.Thread(target=self._record).start()
+
+    def stop_recording(self):
+        self.recording = False
+        self.display_recent_recording_box()
+
+    def display_recent_recording_box(self):
+        recent_file = self.record_file_path
+        self.recordOutputDisplay.setText(recent_file)
+        self.recordOutputDisplay.show()
+        QTimer.singleShot(5000, self.recordOutputDisplay.hide)
+
+    def _update_time(self):
+        seconds = 0
+        while self.recording:
+            self.recordTimeDisplay.setText(time.strftime('%M:%S', time.gmtime(seconds)))
+            time.sleep(1)
+            seconds += 1
+
+    def _record(self):
+        CHUNK = 1024
+        FORMAT = pyaudio.paInt16
+        CHANNELS = 2
+        RATE = 44100
+        RECORD_SECONDS = 10
+
+        audio = pyaudio.PyAudio()
+
+        stream = audio.open(format=FORMAT, channels=CHANNELS,
+                            rate=RATE, input=True,
+                            frames_per_buffer=CHUNK)
+
+        frames = []
+
+        t = threading.Thread(target=self._update_time)
+        t.start()
+
+        while self.recording:
+            data = stream.read(CHUNK)
+            frames.append(data)
+
+        stream.stop_stream()
+        stream.close()
+        audio.terminate()
+
+        t.join()
+
+        wf = wave.open(self.record_file_path, 'wb')
+        wf.setnchannels(CHANNELS)
+        wf.setsampwidth(audio.get_sample_size(FORMAT))
+        wf.setframerate(RATE)
+        wf.writeframes(b''.join(frames))
+        wf.close()
     def myWindowInit(self):
         # 创建播放列表对象（窗体属性）
         self.playList = QMediaPlaylist()
