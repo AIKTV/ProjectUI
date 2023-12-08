@@ -18,8 +18,8 @@ from PyQt5.QtCore import QTimer
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
-recordFileAddress = ""  # 录音/原始文件地址
-handledFileAddress = ""  # 处理后文件地址
+recordFileAddress = r""  # 录音/原始文件地址
+handledFileAddress = r""  # 处理后文件地址
 record_file_path = recordFileAddress  #录音文件地址record_file_path，用于录音子模块中
 
 if_enhance = 'n'
