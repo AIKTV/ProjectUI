@@ -288,14 +288,16 @@ class MainForm(QMainWindow, Ui_MainWindow):
             typetext = '要播放的'
         fileaddress, filetype = QtWidgets.QFileDialog.getOpenFileName(
             self, "选择" + typetext + "文件", os.getcwd(), type)
+        if len(fileaddress)>20:
+            fileaddress_cut = fileaddress[:10]+'...'+fileaddress[len(fileaddress)-5:len(fileaddress)]
         if fileaddress:  # 如果文件名非空
             if button == 'record':  # 传递的类型为record 录音/原始文件
                 self.recordAddress.setText(
-                    os.path.basename(fileaddress))  # 设置文本框内容
+                    os.path.basename(fileaddress_cut))  # 设置文本框内容
                 recordFileAddress = fileaddress  # 更新全局变量的值
             # if button == 'handled':  # 传递的类型为handled 处理后文件
             else:
-                self.handledAddress.setText(os.path.basename(fileaddress))
+                self.handledAddress.setText(os.path.basename(fileaddress_cut))
                 handledFileAddress = fileaddress
 
     def openConfigDialog(self):
