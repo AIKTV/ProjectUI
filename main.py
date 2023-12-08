@@ -15,6 +15,7 @@ import wave
 import pyaudio
 from PyQt5.QtWidgets import (QApplication, QFileDialog, QHBoxLayout, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget)
 from PyQt5.QtCore import QTimer
+from PyQt5.QtMultimedia import QSound  # 导入PyQt5库中的QSound类
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -30,6 +31,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
 
     def __init__(self):
         """使用的控件相关触发器全放这里"""
+
         super(MainForm, self).__init__()
         self.setupUi(self)
         self.chooseRecord.clicked.connect(
@@ -41,9 +43,17 @@ class MainForm(QMainWindow, Ui_MainWindow):
         self.recordButton.clicked.connect(self.start_recording)
         self.pauseRecordButton.clicked.connect(self.stop_recording)
 
-        self.recording = False                    #接下来是初始化一些变量的代码：设置录音状态为 False，表示当前没有在录音。
-        self.record_file_path = ''                #设置录音文件路径为空。
-        self.counter = 0                          #设置计数器为 0，用于记录录音的时长。
+        self.recording = False
+        self.record_file_path = ''
+        self.counter = 0
+
+        self.recordPlayButton.clicked.connect(
+            self.play_sound_a)
+        self.handledPlayButton.clicked.connect(
+            self.play_sound_b)
+        self.recordPlayButton_status = '暂停'  # 记录recordPlayButton的状态
+        self.handledPlayButton_status = '暂停'  # 记录handledPlayButton的状态
+
     def start_recording(self):
         #开始模块
         self.recording = True
@@ -269,9 +279,6 @@ class MainForm(QMainWindow, Ui_MainWindow):
             self.play_btn.setToolTip("暂停")
 
 
-
-
-
     def openfiledialog(self, button, type):
         global recordFileAddress
         global handledFileAddress  # 声明全局变量
@@ -405,6 +412,42 @@ class MainForm(QMainWindow, Ui_MainWindow):
         QtWidgets.QMessageBox.information(self,"转换完成","转换已完成！")
         if dialog:  # 检查对话框对象是否存在
             dialog.close()  # 关闭对话框
+
+    def play_sound_a(self):  # 播放audio_a.wav音频文件的方法
+        global audio_a
+        global audio_b # 声明全局变量
+        self.audio_a = QSound(recordFileAddress)  # 创建一个名为audio_a的QSound对象，用于播放audio_a.wav音频文件
+        self.audio_b = QSound(handledFileAddress)  # 创建一个名为audio_b的QSound对象，用于播放audio_b.wav音频文件
+        if self.recordPlayButton_status == '播放':  # 如果recordPlayButton处于"播放"状态
+            if self.handledPlayButton_status == '暂停':  # 如果handledPlayButton处于"暂停"状态
+                self.audio_b.stop()  # 停止播放audio_b.wav音频文件
+                self.handledPlayButton.setText('播放')  # 修改handledPlayButton的文本为"播放"
+                self.handledPlayButton_status = '播放'  # 修改handledPlayButton的状态为"播放"
+
+            self.audio_a.play()  # 播放audio_a.wav音频文件
+            self.recordPlayButton.setText('暂停')  # 修改recordPlayButton的文本为"暂停"
+            self.recordPlayButton_status = '暂停'  # 修改recordPlayButton的状态为"暂停"
+        else:  # 如果recordPlayButton处于"暂停"状态
+            self.audio_a.stop()  # 停止播放audio_a.wav音频文件
+            self.recordPlayButton.setText('播放')  # 修改recordPlayButton的文本为"播放"
+            self.recordPlayButton_status = '播放'  # 修改recordPlayButton的状态为"播放"
+
+    def play_sound_b(self):  # 播放audio_b.wav音频文件的方法
+        global record_state
+        global handle_state
+        if self.handledPlayButton_status == '播放':  # 如果handledPlayButton处于"播放"状态
+            if self.recordPlayButton_status == '暂停':  # 如果recordPlayButton处于"暂停"状态
+                self.audio_a.stop()  # 停止播放audio_a.wav音频文件
+                self.recordPlayButton.setText('播放')  # 修改recordPlayButton的文本为"播放"
+                self.recordPlayButton_status = '播放'  # 修改recordPlayButton的状态为"播放"
+
+            self.audio_b.play()  # 播放audio_b.wav音频文件
+            self.handledPlayButton.setText('暂停')  # 修改handledPlayButton的文本为"暂停"
+            self.handledPlayButton_status = '暂停'  # 修改handledPlayButton的状态为"暂停"
+        else:  # 如果handledPlayButton处于"暂停"状态
+            self.audio_b.stop()  # 停止播放audio_b.wav音频文件
+            self.handledPlayButton.setText('播放')  # 修改handledPlayButton的文本为"播放"
+            self.handledPlayButton_status = '播放'  # 修改handledPlayButton的状态为"播放"
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
