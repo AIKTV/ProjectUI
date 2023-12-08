@@ -8,7 +8,8 @@ import sys
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QIcon
 from PyQt5.QtMultimedia import QMediaPlaylist, QMediaPlayer, QMediaContent
-from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
+from pydub import AudioSegment
+from pydub.playback import play
 import os
 import time
 import threading
@@ -39,7 +40,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
         self.chooseRecord.clicked.connect(
             lambda: self.openfiledialog('record', 'WAV波形文件(*.wav)'))
         self.chooseHandled.clicked.connect(
-            lambda: self.openfiledialog('handled', 'FLAC无损音频文件(*.flac)'))
+            lambda: self.openfiledialog('handled', 'WAV无损音频文件(*.wav)'))
         self.configButton.clicked.connect(self.openConfigDialog)
         self.dialog = None  # 对话框对象
         self.recordButton.clicked.connect(self.start_recording)
@@ -261,16 +262,23 @@ class MainForm(QMainWindow, Ui_MainWindow):
         # 否则（停止状态）
         else:
             # 获取本地音频文件
-            fileNames, typeName = QFileDialog.getOpenFileNames(None, "选择音乐", 'D:/ai', "*")
-            # 循环音频文件的列表
+            fileNames,_ = QFileDialog.getOpenFileNames(None,"选择音乐",'E:/Projects/Python/ProjectUI/AI-barbara-4.1-Stable-fcpe/results',"FLAC无损音频文件(*.flac);;所有文件(*.*)")
             for i in fileNames:
-                # 把音频文件加载到播放列表对象中
-                self.playList.addMedia(QMediaContent(QUrl.fromLocalFile(i)))
-                # 获取音频文件路径最后一个“/"字符的位置
-                start = i.rfind('/')
-                end = i.rfind('.')
-                # 获取音频文件中文件名称，追加到列表对象中
-                self.musicNames.append(i[start + 1:end])
+                if i.endswith('.flac'):  # 判断文件类型是否为FLAC
+                    # 生成相同前缀的WAV文件名
+                    output_wav = os.path.splitext(i)[0] + ".wav"
+                    audio = AudioSegment.from_file(i,"flac")
+                    audio.export(output_wav,format="wav")
+                    break
+                    play(audio)  # 使用pydub库播放FLAC文件
+                else:
+                    # 把音频文件加载到播放列表对象中
+                    self.playList.addMedia(QMediaContent(QUrl.fromLocalFile(i)))
+                    # 获取音频文件路径最后一个“/"字符的位置
+                    start = i.rfind('/')
+                    end = i.rfind('.')
+                    # 获取音频文件中文件名称，追加到列表对象中
+                    self.musicNames.append(i[start + 1:end])
             # 设置当前播放列表的播放音频索引
             self.playList.setCurrentIndex(0)
             # 开始播放
@@ -423,7 +431,8 @@ class MainForm(QMainWindow, Ui_MainWindow):
                 self.handledPlayButton.setText('播放')  # 修改handledPlayButton的文本为"播放"
                 self.handledPlayButton_status = '播放'  # 修改handledPlayButton的状态为"播放"
 
-            self.audio_a.play()  # 播放audio_a.wav音频文件
+
+            self.audio_a.play()
             self.recordPlayButton.setText('暂停')  # 修改recordPlayButton的文本为"暂停"
             self.recordPlayButton_status = '暂停'  # 修改recordPlayButton的状态为"暂停"
         else:  # 如果recordPlayButton处于"暂停"状态
@@ -440,7 +449,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
                 self.recordPlayButton.setText('播放')  # 修改recordPlayButton的文本为"播放"
                 self.recordPlayButton_status = '播放'  # 修改recordPlayButton的状态为"播放"
 
-            self.audio_b.play()  # 播放audio_b.wav音频文件
+            self.audio_b.play()  # 播放audio_b.flac音频文件
             self.handledPlayButton.setText('暂停')  # 修改handledPlayButton的文本为"暂停"
             self.handledPlayButton_status = '暂停'  # 修改handledPlayButton的状态为"暂停"
         else:  # 如果handledPlayButton处于"暂停"状态
