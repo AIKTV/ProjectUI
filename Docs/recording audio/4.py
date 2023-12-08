@@ -18,10 +18,10 @@ class Recorder(QMainWindow):
         self.record_button.clicked.connect(self.start_recording)
         self.stop_button = QPushButton('停止录音')
         self.stop_button.clicked.connect(self.stop_recording)
-        self.time_label = QLabel('00:00')
+        self.recordTimeDisplay = QLabel('00:00')
 
         self.recent_recording_label = QLabel('最近录音文件：')
-        self.recent_recording_box = QLabel()
+        self.recordOutputDisplay = QLabel()
 
         h_box = QHBoxLayout()
         h_box.addWidget(self.record_button)
@@ -29,9 +29,9 @@ class Recorder(QMainWindow):
 
         v_box = QVBoxLayout()
         v_box.addLayout(h_box)
-        v_box.addWidget(self.time_label)
+        v_box.addWidget(self.recordTimeDisplay)
         v_box.addWidget(self.recent_recording_label)
-        v_box.addWidget(self.recent_recording_box)
+        v_box.addWidget(self.recordOutputDisplay)
 
         main_widget = QWidget()
         main_widget.setLayout(v_box)
@@ -45,7 +45,8 @@ class Recorder(QMainWindow):
         self.recording = True
         self.counter += 1
         current_time = time.strftime("%m%d-%H%M")
-        self.record_file_path = f"record-{current_time}-{self.counter}.wav"
+        # 修改文件存放路径为新的位置
+        self.record_file_path = f"D:/GitHub/ProjectUI/Docs/recording audio/recordings/record-{current_time}-{self.counter}.wav"
         threading.Thread(target=self._record).start()
 
     def stop_recording(self):
@@ -54,14 +55,14 @@ class Recorder(QMainWindow):
 
     def display_recent_recording_box(self):
         recent_file = self.record_file_path
-        self.recent_recording_box.setText(recent_file)
-        self.recent_recording_box.show()
-        QTimer.singleShot(5000, self.recent_recording_box.hide)
+        self.recordOutputDisplay.setText(recent_file)
+        self.recordOutputDisplay.show()
+        QTimer.singleShot(5000, self.recordOutputDisplay.hide)
 
     def _update_time(self):
         seconds = 0
         while self.recording:
-            self.time_label.setText(time.strftime('%M:%S', time.gmtime(seconds)))
+            self.recordTimeDisplay.setText(time.strftime('%M:%S', time.gmtime(seconds)))
             time.sleep(1)
             seconds += 1
 
