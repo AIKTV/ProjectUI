@@ -1,14 +1,17 @@
 import warnings
+from PyQt5.Qt import Qt
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QProcess
 from AIKTVUI import Ui_MainWindow
-import sys
+from pydub.playback import play
+from pydub import AudioSegment
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QIcon
 from PyQt5.QtMultimedia import QMediaPlaylist, QMediaPlayer, QMediaContent
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 import os
+import sys
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
@@ -158,11 +161,18 @@ class MainForm(QMainWindow, Ui_MainWindow):
         # 否则（停止状态）
         else:
             # 获取本地音频文件
-            fileNames, typeName = QFileDialog.getOpenFileNames(None, "选择音乐", 'D:/ai', "*")
+            fileNames, typeName = QFileDialog.getOpenFileNames(None, "选择音乐", 'E:\Projects\Python\ProjectUI\AI-barbara-4.1-Stable-fcpe','WAV波形文件(*.wav);;FLAC无损音频文件(*.flac)')
             # 循环音频文件的列表
             for i in fileNames:
                 # 把音频文件加载到播放列表对象中
                 self.playList.addMedia(QMediaContent(QUrl.fromLocalFile(i)))
+                # 判断文件类型是否为FLAC
+                if typeName == 'FLAC无损音频文件(*.flac)':
+                    audio = AudioSegment.from_file(fileNames, "flac")
+                    play(audio)
+                else:
+                    # 把音频文件加载到播放列表对象中
+                    self.playList.addMedia(QMediaContent(QUrl.fromLocalFile(i)))
                 # 获取音频文件路径最后一个“/"字符的位置
                 start = i.rfind('/')
                 end = i.rfind('.')
@@ -206,50 +216,55 @@ class MainForm(QMainWindow, Ui_MainWindow):
         dialog.setWindowTitle("AI模型配置")
         layout = QtWidgets.QVBoxLayout(dialog)
 
-        self.model_name_label = QLabel("请输入使用的模型步数（例：模型为G_800.pth就输入800）")
-        self.model_name_edit = QLineEdit()
+        self.model_name_label = QLabel("请选择使用的模型:")
+        self.model_name_combobox = QComboBox()
+        self.model_name_combobox.addItem("Furina")
+        self.model_name_combobox.addItem("Neuvillette")
         layout.addWidget(self.model_name_label)
-        layout.addWidget(self.model_name_edit)
+        layout.addWidget(self.model_name_combobox)
 
         self.key_num_label = QLabel("请输入音高（例：维持原调为0，支持正负，数字为半音）")
         self.key_num_edit = QLineEdit()
         layout.addWidget(self.key_num_label)
         layout.addWidget(self.key_num_edit)
 
-        self.f0_predictor_label = QLabel("请选择使用的F0预测器，0为crepe，1为pm，2为dio，3为harvest")
-        self.f0_predictor_edit = QLineEdit()
+        self.f0_predictor_label = QLabel("请选择使用的F0预测器，0为crepe，1为pm，2为dio，3为harvest，4为rmvpe，5为fcpe")
+        self.f0_predictor_combobox = QComboBox()
+        self.f0_predictor_combobox.addItem('crepe')
+        self.f0_predictor_combobox.addItem('pm')
+        self.f0_predictor_combobox.addItem('dio')
+        self.f0_predictor_combobox.addItem('harvest')
+        self.f0_predictor_combobox.addItem('rmvpe')
+        self.f0_predictor_combobox.addItem('fcpe')
         layout.addWidget(self.f0_predictor_label)
-        layout.addWidget(self.f0_predictor_edit)
+        layout.addWidget(self.f0_predictor_combobox)
 
         self.if_diffusion_label = QLabel("是否使用浅层扩散模型？使用后可解决一部分电音问题（推荐）\n请注意该模型需先单独训练好（y/n）")
-        self.if_diffusion_edit = QLineEdit()
+        self.if_diffusion_switch = QComboBox()
+        self.if_diffusion_switch.addItems(['y', 'n'])
         layout.addWidget(self.if_diffusion_label)
-        layout.addWidget(self.if_diffusion_edit)
+        layout.addWidget(self.if_diffusion_switch)
 
-        self.diffusion_name_label = QLabel("请输入使用的扩散模型步数（例：模型为model_2000.pt就输入2000）")
-        self.diffusion_name_edit = QLineEdit()
-        layout.addWidget(self.diffusion_name_label)
-        layout.addWidget(self.diffusion_name_edit)
+        self.if_feature_retrieval_label = QLabel("是否使用特征检索？特征检索可以减小音色泄露，并且不是非常影响咬字\n请注意该模型需先单独训练好（y/n）")
+        self.if_feature_retrieval_switch = QComboBox()
+        self.if_feature_retrieval_switch.addItems(['y', 'n'])
+        layout.addWidget(self.if_feature_retrieval_label)
+        layout.addWidget(self.if_feature_retrieval_switch)
 
-        self.diffusion_k_step_label = QLabel("请输入扩散步数，越大越接近扩散模型的结果，默认100（例：100）")
-        self.diffusion_k_step_edit = QLineEdit()
-        layout.addWidget(self.diffusion_k_step_label)
-        layout.addWidget(self.diffusion_k_step_edit)
-
-        self.if_cluster_label = QLabel("是否使用聚类模型？聚类模型可以减小音色泄漏，但会降低模型的咬字\n请注意该模型需先单独训练好（y/n）")
-        self.if_cluster_edit = QLineEdit()
-        layout.addWidget(self.if_cluster_label)
-        layout.addWidget(self.if_cluster_edit)
-
-        self.cluster_ratio_label = QLabel("请输入聚类方案占比，范围 0-1（例：0为不使用）")
-        self.cluster_ratio_edit = QLineEdit()
+        self.cluster_ratio_label = QLabel("请输入特征检索占比，范围 0-1（例：0为不使用）")
+        self.cluster_ratio_slider = QSlider()
+        self.cluster_ratio_slider.setOrientation(Qt.Horizontal)
+        self.cluster_ratio_slider.setMinimum(0)
+        self.cluster_ratio_slider.setMaximum(10)
+        self.cluster_ratio_slider.setValue(5)  # 设置默认值，可以根据需要调整
         layout.addWidget(self.cluster_ratio_label)
-        layout.addWidget(self.cluster_ratio_edit)
+        layout.addWidget(self.cluster_ratio_slider)
 
         self.if_auto_predict_f0_label = QLabel("是否使用自动音高预测？推荐语音转换开启，歌声转换开启会严重跑调（y/n）")
-        self.if_auto_predict_f0_edit = QLineEdit()
+        self.if_auto_predict_f0_switch = QComboBox()
+        self.if_auto_predict_f0_switch.addItems(['n', 'y'])
         layout.addWidget(self.if_auto_predict_f0_label)
-        layout.addWidget(self.if_auto_predict_f0_edit)
+        layout.addWidget(self.if_auto_predict_f0_switch)
 
         self.if_clip_label = QLabel("是否使用音频强制切片？单位为秒（例：0为自动切片，10为强制10秒切一段）")
         self.if_clip_edit = QLineEdit()
@@ -269,38 +284,30 @@ class MainForm(QMainWindow, Ui_MainWindow):
 
     def start_conversion(self):
         global recordFileAddress
-        model_name = self.model_name_edit.text()
+        model_name = self.model_name_combobox.currentText()
         if recordFileAddress:                                         # 将地址传递给 self.wav_name_edit
             wav_name = recordFileAddress.split('/')[-1].split('.')[0]
         key_num = self.key_num_edit.text()
-        f0_predictor = self.f0_predictor_edit.text()
-        if f0_predictor == '0':
-            f0_predictor = 'crepe'
-        if f0_predictor == '1':
-            f0_predictor = 'pm'
-        if f0_predictor == '2':
-            f0_predictor = 'dio'
-        if f0_predictor == '3':
-            f0_predictor = 'harvest'
-        if_diffusion = self.if_diffusion_edit.text()
-        diffusion_name = self.diffusion_name_edit.text()
-        diffusion_k_step = self.diffusion_k_step_edit.text()
-
-        if_cluster = self.if_cluster_edit.text()
-        cluster_ratio = self.cluster_ratio_edit.text()
-
-        if_auto_predict_f0 = self.if_auto_predict_f0_edit.text()
-
+        f0_predictor = self.f0_predictor_combobox.currentText()
+        if_diffusion = self.if_diffusion_switch.currentText()
+        diffusion_name = '10000'
+        if model_name == 'Furina':
+            diffusion_k_step = '20'
+        else:
+            diffusion_k_step = '100'
+        if_feature_retrieval = self.if_feature_retrieval_switch.currentText()
+        cluster_ratio = self.cluster_ratio_slider.value() / 10.0
+        if_auto_predict_f0 = self.if_auto_predict_f0_switch.currentText()
         if_clip = self.if_clip_edit.text()
         if_linear_gradient = self.if_linear_gradient_edit.text()
 
         inference_case = r'.\env\python.exe inference_main.py'
-        inference_case = inference_case + f' -m "logs/44k/G_{model_name}.pth" -c "configs/config.json" -n "{wav_name}" -t {key_num} -s "barbara" -f0p {f0_predictor}'
+        inference_case = inference_case + f' -m "logs/44k/{model_name}.pth" -c "configs/config.json" -n "{wav_name}" -t {key_num} -s "barbara" -f0p {f0_predictor}'
 
         if if_diffusion == 'y':
             inference_case = inference_case + f' -shd -dm "logs/44k/diffusion/model_{diffusion_name}.pt" -ks {diffusion_k_step}'
-        if if_cluster == 'y':
-            inference_case = inference_case + f' -cm "logs/44k/kmeans_10000.pt" -cr {cluster_ratio}'
+        if if_feature_retrieval == 'y':
+            inference_case = inference_case + f' --feature_retrieval -cr {cluster_ratio}'
         if if_auto_predict_f0 == 'y':
             inference_case = inference_case + f' -a'
 
