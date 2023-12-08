@@ -1,6 +1,10 @@
 import sys  # 导入sys模块
+import warnings
+
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton  # 导入PyQt5库中的QApplication、QWidget、QPushButton类
 from PyQt5.QtMultimedia import QSound  # 导入PyQt5库中的QSound类
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 class SoundPlayer(QWidget):  # 定义一个名为SoundPlayer的继承自QWidget的类
     def __init__(self):  # 类的构造函数
@@ -19,8 +23,8 @@ class SoundPlayer(QWidget):  # 定义一个名为SoundPlayer的继承自QWidget�
         self.handledPlayButton.setGeometry(150, 50, 100, 50)  # 设置handledPlayButton在窗口中的位置和大小
         self.handledPlayButton_status = '播放'  # 记录handledPlayButton的状态
 
-        self.audio_a = QSound('audio_a.wav')  # 创建一个名为audio_a的QSound对象，用于播放audio_a.wav音频文件
-        self.audio_b = QSound('audio_b.wav')  # 创建一个名为audio_b的QSound对象，用于播放audio_b.wav音频文件
+        self.audio_a = QSound(r"D:\Matlab\3.wav")  # 创建一个名为audio_a的QSound对象，用于播放audio_a.wav音频文件
+        self.audio_b = QSound(r"D:\Matlab\4.wav")  # 创建一个名为audio_b的QSound对象，用于播放audio_b.wav音频文件
 
     def play_sound_a(self):  # 播放audio_a.wav音频文件的方法
         if self.recordPlayButton_status == '播放':  # 如果recordPlayButton处于"播放"状态
