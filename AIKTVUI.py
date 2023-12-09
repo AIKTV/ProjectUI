@@ -137,12 +137,22 @@ class Ui_MainWindow(object):
         self.playFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.playFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.playFrame.setObjectName("playFrame")
-
+        self.time_lbl = QtWidgets.QLabel(self.playFrame)
+        self.time_lbl.setGeometry(QtCore.QRect(390,110,72,15))
+        self.time_lbl.setObjectName("time_lbl")
+        self.time_lbl_2 = QtWidgets.QLabel(self.playFrame)
+        self.time_lbl_2.setGeometry(QtCore.QRect(480,110,72,15))
+        self.time_lbl_2.setObjectName("time_lbl_2")
         self.time_slider = QtWidgets.QSlider(self.playFrame)
         self.time_slider.setGeometry(QtCore.QRect(170,70,571,22))
         self.time_slider.setOrientation(QtCore.Qt.Horizontal)
         self.time_slider.setObjectName("time_slider")
-
+        self.play_btn = QtWidgets.QPushButton(self.playFrame)
+        self.play_btn.setGeometry(QtCore.QRect(50,70,93,28))
+        self.play_btn.setObjectName("play_btn")
+        self.mode_btn = QtWidgets.QPushButton(self.playFrame)
+        self.mode_btn.setGeometry(QtCore.QRect(770,70,93,28))
+        self.mode_btn.setObjectName("mode_btn")
         self.gridLayout.addWidget(self.playFrame,1,0,1,2)
         self.gridLayout_2.addWidget(self.playWidget,1,0,1,2)
         self.gridLayout.addWidget(self.playFrame, 1, 0, 1, 2)
@@ -181,15 +191,51 @@ class Ui_MainWindow(object):
         self.playFrame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.playFrame.setObjectName("playFrame")
 
+        self.time_lbl = QtWidgets.QLabel(self.playFrame)
+        self.time_lbl.setGeometry(QtCore.QRect(390, 110, 90, 18))
+        font = QtGui.QFont()
+        font.setFamily("仿宋")
+        self.time_lbl.setFont(font)
+        self.time_lbl.setObjectName("time_lbl")
+
+        self.time_lbl_2 = QtWidgets.QLabel(self.playFrame)
+        self.time_lbl_2.setGeometry(QtCore.QRect(480, 110, 90, 18))
+        font = QtGui.QFont()
+        font.setFamily("仿宋")
+        self.time_lbl_2.setFont(font)
+        self.time_lbl_2.setObjectName("time_lbl_2")
 
         self.time_slider = QtWidgets.QSlider(self.playFrame)
         self.time_slider.setGeometry(QtCore.QRect(170, 70, 571, 22))
         self.time_slider.setOrientation(QtCore.Qt.Horizontal)
         self.time_slider.setObjectName("time_slider")
 
+        self.play_btn = QtWidgets.QPushButton(self.playFrame)
+        self.play_btn.setEnabled(True)
+        self.play_btn.setGeometry(QtCore.QRect(50, 70, 93, 28))
+        font = QtGui.QFont()
+        font.setFamily("仿宋")
+        self.play_btn.setFont(font)
+        self.play_btn.setMouseTracking(False)
+        self.play_btn.setTabletTracking(False)
+        self.play_btn.setText("")
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap("images/1.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.play_btn.setIcon(icon1)
+        self.play_btn.setIconSize(QtCore.QSize(70, 150))
+        self.play_btn.setObjectName("play_btn")
 
-
-
+        self.mode_btn = QtWidgets.QPushButton(self.playFrame)
+        self.mode_btn.setGeometry(QtCore.QRect(770, 70, 93, 28))
+        font = QtGui.QFont()
+        font.setFamily("仿宋")
+        self.mode_btn.setFont(font)
+        self.mode_btn.setText("")
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap("images/4.ico"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.mode_btn.setIcon(icon2)
+        self.mode_btn.setIconSize(QtCore.QSize(130, 130))
+        self.mode_btn.setObjectName("mode_btn")
 
         self.gridLayout.addWidget(self.playFrame, 1, 0, 1, 2)
         self.gridLayout_2.addWidget(self.playWidget, 1, 0, 1, 2)
@@ -197,7 +243,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
+        self.myWindowInit()
 
 
 
@@ -218,15 +264,20 @@ class Ui_MainWindow(object):
         self.handledPlayBox.setTitle(_translate("MainWindow", "处理后音频"))
         self.handledPlayButton.setText(_translate("MainWindow", "播放"))
         self.handledStopButton.setText(_translate("MainWindow", "停止"))
-
-
+        self.time_lbl.setText(_translate("MainWindow", "TextLabel"))
+        self.time_lbl_2.setText(_translate("MainWindow", "TextLabel"))
+        self.play_btn.setText(_translate("MainWindow", "PushButton"))
+        self.mode_btn.setText(_translate("MainWindow", "PushButton"))
         self.recordPlayBox.setTitle(_translate("MainWindow", "原始音频"))
         self.recordPlayButton.setText(_translate("MainWindow", "播放"))
         self.recordStopButton.setText(_translate("MainWindow", "停止"))
         self.handledPlayBox.setTitle(_translate("MainWindow", "处理后音频"))
         self.handledPlayButton.setText(_translate("MainWindow", "播放"))
         self.handledStopButton.setText(_translate("MainWindow", "停止"))
-
+        self.play_btn.setText(_translate("MainWindow", "PushButton"))
+        self.mode_btn.setText(_translate("MainWindow", "PushButton"))
+        self.time_lbl.setText(_translate("MainWindow", "00:00   /"))
+        self.time_lbl_2.setText(_translate("MainWindow", "00:00"))
 
 
 if __name__ == "__main__":

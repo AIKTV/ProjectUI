@@ -23,8 +23,8 @@ class SoundPlayer(QWidget):  # 定义一个名为SoundPlayer的继承自QWidget�
         self.handledPlayButton.setGeometry(150, 50, 100, 50)  # 设置handledPlayButton在窗口中的位置和大小
         self.handledPlayButton_status = '播放'  # 记录handledPlayButton的状态
 
-        self.audio_a = QSound(r"D:\ai\9.wav")  # 创建一个名为audio_a的QSound对象，用于播放audio_a.wav音频文件
-        self.audio_b = QSound(r"D:\ai\9.wav")  # 创建一个名为audio_b的QSound对象，用于播放audio_b.wav音频文件
+        self.audio_a = QSound(r"D:\Matlab\3.wav")  # 创建一个名为audio_a的QSound对象，用于播放audio_a.wav音频文件
+        self.audio_b = QSound(r"D:\Matlab\4.wav")  # 创建一个名为audio_b的QSound对象，用于播放audio_b.wav音频文件
 
     def play_sound_a(self):  # 播放audio_a.wav音频文件的方法
         if self.recordPlayButton_status == '播放':  # 如果recordPlayButton处于"播放"状态
