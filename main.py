@@ -1,4 +1,7 @@
 import warnings
+from pathlib import Path
+
+import unicodedata
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import QProcess
@@ -287,9 +290,10 @@ class MainForm(QMainWindow, Ui_MainWindow):
         else:
             typetext = '要播放的'
         fileaddress, filetype = QtWidgets.QFileDialog.getOpenFileName(
-            self, "选择" + typetext + "文件", os.getcwd(), type)
-        if len(fileaddress)>20:
-            fileaddress_cut = fileaddress[:10]+'...'+fileaddress[len(fileaddress)-5:len(fileaddress)]
+            self, "选择" + typetext + "文件", str(Path.home() / "Music"), type)
+        if len(unicodedata.normalize('NFC', fileaddress)) > 30:
+            print(len(unicodedata.normalize('NFC', fileaddress)))
+            fileaddress_cut = unicodedata.normalize('NFC', fileaddress)[0:30] + '...'
         if fileaddress:  # 如果文件名非空
             if button == 'record':  # 传递的类型为record 录音/原始文件
                 self.recordAddress.setText(
