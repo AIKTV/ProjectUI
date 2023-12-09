@@ -45,17 +45,118 @@ class MainForm(QMainWindow, Ui_MainWindow):
         self.dialog = None  # 对话框对象
         self.recordButton.clicked.connect(self.start_recording)
         self.pauseRecordButton.clicked.connect(self.stop_recording)
-
         self.recording = False
         self.record_file_path = ''
         self.counter = 0
 
-        self.recordPlayButton.clicked.connect(
-            self.play_sound_a)
-        self.handledPlayButton.clicked.connect(
-            self.play_sound_b)
-        self.recordPlayButton_status = '暂停'  # 记录recordPlayButton的状态
-        self.handledPlayButton_status = '暂停'  # 记录handledPlayButton的状态
+        self.player_a = QMediaPlayer()
+        self.player_b = QMediaPlayer()
+
+        self.recordPlayButton.clicked.connect(self.play_record_a)
+        self.recordStopButton.clicked.connect(self.pause_record_a)
+        self.handledPlayButton.clicked.connect(self.play_record_b)
+        self.handledStopButton.clicked.connect(self.pause_record_b)
+
+        self.time_slider.setMinimum(0)
+        self.time_slider.setMaximum(100)
+        self.time_slider.sliderMoved.connect(self.time_slider_moved)
+        self.time_slider.sliderReleased.connect(self.time_slider_released)
+
+        self.current_time_label = QLabel("00:00", self)
+        self.current_time_label.setGeometry(420, 100, 100, 920)
+
+        self.total_time_label = QLabel("00:00", self)
+        self.total_time_label.setGeometry(480, 100, 60, 920)
+
+        # 创建定时器，用于更新进度条位置和时间显示
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_time_slider_position)
+        self.timer.start(100)
+
+        self.paused_position_a = 0
+        self.paused_position_b = 0
+
+    def play_record_a(self):
+        # 确保只有一个音频在播放
+        global recordFileAddress
+        self.player_a.setMedia(QMediaContent(QUrl.fromLocalFile(recordFileAddress)))
+        self.stop_all_players()
+        self.player_a.play()
+
+    def pause_record_a(self):
+        if self.player_a.state() == QMediaPlayer.PlayingState:
+            self.paused_position_a = self.player_a.position()
+            self.player_a.pause()
+        elif self.player_a.state() == QMediaPlayer.PausedState:
+            self.player_a.setPosition(self.paused_position_a)
+            self.player_a.play()
+
+    def play_record_b(self):
+        global handledFileAddress
+        self.player_b.setMedia(QMediaContent(QUrl.fromLocalFile(handledFileAddress)))
+        self.stop_all_players()
+        self.player_b.play()
+
+    def pause_record_b(self):
+        if self.player_b.state() == QMediaPlayer.PlayingState:
+            self.paused_position_b = self.player_b.position()
+            self.player_b.pause()
+        elif self.player_b.state() == QMediaPlayer.PausedState:
+            self.player_b.setPosition(self.paused_position_b)
+            self.player_b.play()
+
+    def update_time_slider_position(self):
+        global recordFileAddress
+        global handledFileAddress
+        if self.player_a.state() == QMediaPlayer.PlayingState:
+            pos_a = self.player_a.position()
+            duration_a = self.player_a.duration()
+            if duration_a != 0:
+                self.time_slider.setValue(pos_a * 100 / duration_a)
+                current_time_a = self.milliseconds_to_time(pos_a)
+                total_time_a = self.milliseconds_to_time(duration_a)
+                self.current_time_label.setText(current_time_a)
+                self.total_time_label.setText(total_time_a)
+
+        elif self.player_b.state() == QMediaPlayer.PlayingState:
+            pos_b = self.player_b.position()
+            duration_b = self.player_b.duration()
+            if duration_b != 0:
+                self.time_slider.setValue(pos_b * 100 / duration_b)
+                current_time_b = self.milliseconds_to_time(pos_b)
+                total_time_b = self.milliseconds_to_time(duration_b)
+                self.current_time_label.setText(current_time_b)
+                self.total_time_label.setText(total_time_b)
+
+
+    def milliseconds_to_time(self, ms):
+        seconds = int(ms / 1000)
+        minutes = int(seconds / 60)
+        seconds = seconds % 60
+        return f"{minutes:02d}:{seconds:02d}"
+
+    def time_slider_moved(self):
+        value = self.time_slider.value()
+        if self.player_a.state() != QMediaPlayer.StoppedState:
+            duration = self.player_a.duration()
+            position = int(value / 100 * duration)
+            self.player_a.setPosition(position)
+        elif self.player_b.state() != QMediaPlayer.StoppedState:
+            duration = self.player_b.duration()
+            position = int(value / 100 * duration)
+            self.player_b.setPosition(position)
+
+    def time_slider_released(self):
+        if self.player_a.state() == QMediaPlayer.PlayingState:
+            self.player_a.play()
+        elif self.player_b.state() == QMediaPlayer.PlayingState:
+            self.player_b.play()
+
+    def stop_all_players(self):
+        self.player_a.stop()
+        self.player_b.stop()
+
+
 
     def start_recording(self):
         #开始模块
@@ -136,53 +237,9 @@ class MainForm(QMainWindow, Ui_MainWindow):
         wf.writeframes(b''.join(frames))  # 将frames列表中的音频数据写入录音文件
         wf.close()  # 关闭录音文件
 
-    def myWindowInit(self):
-        # 创建播放列表对象（窗体属性）
-        self.playList = QMediaPlaylist()
-        # 初始化播放列表对象的播放模式Loop(顺序播放）
-        self.playList.setPlaybackMode(QMediaPlaylist.Loop)
-        # 创建播放器对象（窗体属性）
-        self.player = QMediaPlayer()
-        # 初始化播放器的播放音量最大
-        self.player.setVolume(100)
-        # 设置播放器的播放列表
-        self.player.setPlaylist(self.playList)
-        # 创建列表对像（窗体属性）
-        self.musicNames = []
-        # 设置按钮的提示信息
-        self.play_btn.setToolTip("播放")
-        self.mode_btn.setToolTip("顺序播放")
-        # 给播放按钮的单击信号（clicke)调用函数musicPlay
-        self.play_btn.clicked.connect(self.musicPlay)
-        # 给播放器的播放音频持续时长改变信号（durationChang)调用getTotalTime
-        self.player.durationChanged.connect(self.getTotalTime)
-        # 给播放器的当前播放位置更改信号（positionChanged)调用getCurrentTime
-        self.player.positionChanged.connect(self.getCurrentTime)
-        # 给时间进度条的拖拽移动（sliderMoved)调用自主定义函数timeChanfed
-        self.time_slider.sliderMoved.connect(self.timeChanged)
-        # 给模式按钮点击（clicked信号）调用自定义函数modeChanged
-        self.mode_btn.clicked.connect(self.modeChanged)
 
 
-    def modeChanged(self):
-        # 判断播放列表的播放模式是否是顺序播放
-        if self.playList.playbackMode() == QMediaPlaylist.Loop:
-            # 1)更改播放列表当前播放模式为单曲循环
-            self.playList.setPlaybackMode(QMediaPlaylist.CurrentItemInLoop)
-            # 2)更改模式按钮的图片为单曲循环图片
-            self.mode_btn.setIcon(QIcon("images/3.ico"))
-            # 3)更改模式按钮提示信息
-            self.mode_btn.setToolTip("单曲循环")
-            # 否则单曲循环
-        else:
-            # 1)更改播放列表当前播放模式为顺序播放
-            self.playList.setPlaybackMode(QMediaPlaylist.Loop)
-            # 2)更改模式按钮的图片为顺序图片
-            self.mode_btn.setIcon(QIcon("images/4.ico"))
-            # 3)更改模式按钮提示信息
-            self.mode_btn.setToolTip("顺序播放")
 
-    # 自定义函数，获取播放音频的总时长,参数d保存的音频的总时长 （毫秒）
     def getTotalTime(self, d):
         # .设置时间进度条的进度值和正在播放的音频总时长一致
         self.time_slider.setRange(0, d)
@@ -206,8 +263,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
         b = str_time1
         self.time_lbl_2.setText(f"{b}")
 
-        # 获取当前播放列表
-        index = self.playList.currentIndex()
+
 
 
 
@@ -235,50 +291,7 @@ class MainForm(QMainWindow, Ui_MainWindow):
         a = str_time + "   /"
         self.time_lbl.setText(f"{a}")
 
-    # 自定义函数，更改当前播放位置
-    def timeChanged(self, t):
-        # 设置播放器的当前位置为进度条的当前进度
-        self.player.setPosition(t)
 
-    # 自定义播放函数
-    def musicPlay(self):
-        # 判断播放器是否是播放状态
-        if self.player.state() == QMediaPlayer.State.PlayingState:
-            # 更改播放器为暂停状态
-            self.player.pause()
-            # 更改播放按钮的图片为暂停图片
-            self.play_btn.setIcon(QIcon("images/1.ico"))
-            # 更改播放按钮的提示信息为“播放”
-            self.play_btn.setToolTip("播放")
-
-        # 判断播放器是否是暂停状态
-        elif self.player.state() == QMediaPlayer.State.PausedState:
-            # 更改播放器为播放状态
-            self.player.play()
-            # 更改播放按钮的图片为播放图片
-            self.play_btn.setIcon(QIcon("images/2.ico"))
-            # 更改播放按钮的提示信息为“暂停”
-            self.play_btn.setToolTip("暂停")
-        # 否则（停止状态）
-        else:
-            # 获取本地音频文件
-            fileNames,_ = QFileDialog.getOpenFileNames(None,"选择音乐",'E:/Projects/Python/ProjectUI/AI-barbara-4.1-Stable-fcpe/results',"FLAC无损音频文件(*.flac);;所有文件(*.*)")
-            for i in fileNames:
-                    # 把音频文件加载到播放列表对象中
-                    self.playList.addMedia(QMediaContent(QUrl.fromLocalFile(i)))
-                    # 获取音频文件路径最后一个“/"字符的位置
-                    start = i.rfind('/')
-                    end = i.rfind('.')
-                    # 获取音频文件中文件名称，追加到列表对象中
-                    self.musicNames.append(i[start + 1:end])
-            # 设置当前播放列表的播放音频索引
-            self.playList.setCurrentIndex(0)
-            # 开始播放
-            self.player.play()
-            # 更改播放按钮的图片为暂停图片
-            self.play_btn.setIcon(QIcon("images/2.ico"))
-            # 更改播放按钮的提示信息为“暂停”
-            self.play_btn.setToolTip("暂停")
 
 
     def openfiledialog(self, button, type):
@@ -412,42 +425,52 @@ class MainForm(QMainWindow, Ui_MainWindow):
         if dialog:  # 检查对话框对象是否存在
             dialog.close()  # 关闭对话框
 
-    def play_sound_a(self):  # 播放audio_a.wav音频文件的方法
-        global audio_a
-        global audio_b # 声明全局变量
-        self.audio_a = QSound(recordFileAddress)  # 创建一个名为audio_a的QSound对象，用于播放audio_a.wav音频文件
-        self.audio_b = QSound(handledFileAddress)  # 创建一个名为audio_b的QSound对象，用于播放audio_b.wav音频文件
-        if self.recordPlayButton_status == '播放':  # 如果recordPlayButton处于"播放"状态
-            if self.handledPlayButton_status == '暂停':  # 如果handledPlayButton处于"暂停"状态
-                self.audio_b.stop()  # 停止播放audio_b.wav音频文件
-                self.handledPlayButton.setText('播放')  # 修改handledPlayButton的文本为"播放"
-                self.handledPlayButton_status = '播放'  # 修改handledPlayButton的状态为"播放"
+    def play_sound_a(self):
+        if self.recordPlayButton.text() == '播放':
+            if self.handledPlayButton.text() == '暂停':
+                self.player_b.stop()
+                self.handledPlayButton.setText('播放')
+            self.player_a.play()
+            self.recordPlayButton.setText('暂停')
+        else:
+            self.player_a.pause()
+            self.recordPlayButton.setText('播放')
 
+    def play_sound_b(self):
+        if self.handledPlayButton.text() == '播放':
+            if self.recordPlayButton.text() == '暂停':
+                self.player_a.pause()
+                self.recordPlayButton.setText('播放')
+            self.player_b.play()
+            self.handledPlayButton.setText('暂停')
+        else:
+            self.player_b.pause()
+            self.handledPlayButton.setText('播放')
 
-            self.audio_a.play()
-            self.recordPlayButton.setText('暂停')  # 修改recordPlayButton的文本为"暂停"
-            self.recordPlayButton_status = '暂停'  # 修改recordPlayButton的状态为"暂停"
-        else:  # 如果recordPlayButton处于"暂停"状态
-            self.audio_a.stop()  # 停止播放audio_a.wav音频文件
-            self.recordPlayButton.setText('播放')  # 修改recordPlayButton的文本为"播放"
-            self.recordPlayButton_status = '播放'  # 修改recordPlayButton的状态为"播放"
+    def update_slider_position(self):
+        if self.recordPlayButton.text() == '暂停':
+            pos_a = self.player_a.position() * 100 / self.player_a.duration()
+            self.slider.setValue(pos_a)
+        elif self.handledPlayButton.text() == '暂停':
+            pos_b = self.player_b.position() * 100 / self.player_b.duration()
+            self.slider.setValue(pos_b)
 
-    def play_sound_b(self):  # 播放audio_b.wav音频文件的方法
-        global record_state
-        global handle_state
-        if self.handledPlayButton_status == '播放':  # 如果handledPlayButton处于"播放"状态
-            if self.recordPlayButton_status == '暂停':  # 如果recordPlayButton处于"暂停"状态
-                self.audio_a.stop()  # 停止播放audio_a.wav音频文件
-                self.recordPlayButton.setText('播放')  # 修改recordPlayButton的文本为"播放"
-                self.recordPlayButton_status = '播放'  # 修改recordPlayButton的状态为"播放"
+    def slider_moved(self):
+        value = self.slider.value()
+        if self.recordPlayButton.text() == '暂停':
+            duration = self.player_a.duration()
+            position = int(value / 100 * duration)
+            self.player_a.setPosition(position)
+        elif self.handledPlayButton.text() == '暂停':
+            duration = self.player_b.duration()
+            position = int(value / 100 * duration)
+            self.player_b.setPosition(position)
 
-            self.audio_b.play()  # 播放audio_b.flac音频文件
-            self.handledPlayButton.setText('暂停')  # 修改handledPlayButton的文本为"暂停"
-            self.handledPlayButton_status = '暂停'  # 修改handledPlayButton的状态为"暂停"
-        else:  # 如果handledPlayButton处于"暂停"状态
-            self.audio_b.stop()  # 停止播放audio_b.wav音频文件
-            self.handledPlayButton.setText('播放')  # 修改handledPlayButton的文本为"播放"
-            self.handledPlayButton_status = '播放'  # 修改handledPlayButton的状态为"播放"
+    def slider_released(self):
+        if self.recordPlayButton.text() == '暂停':
+            self.player_a.play()
+        elif self.handledPlayButton.text() == '暂停':
+            self.player_b.play()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
